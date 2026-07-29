@@ -1,252 +1,77 @@
 [
   {
-    "pmid": "41469661",
-    "title_en": "Impact of musical instrument practice on baseline psychomotor and technical skills in novice dental students: a prospective controlled study.",
-    "title_tr": "Acemi dişhekimliği öğrencilerinde müzik aleti uygulamasının temel psikomotor ve teknik beceriler üzerindeki etkisi: ileriye dönük kontrollü bir çalışma.",
-    "history_en": "BACKGROUND: The acquisition of surgical skills in dental education relies on psychomotor ability, visual-spatial reasoning, and manual dexterity. Given the increasing strain on training environments, identifying factors predictive of technical proficiency has become a priority.",
-    "history_tr": "AMAÇ: Diş hekimliği eğitiminde cerrahi becerilerin kazanılması psikomotor yeteneğe, görsel-uzaysal akıl yürütmeye ve el becerisine dayanır. Eğitim ortamlarındaki artan baskı göz önüne alındığında, teknik yeterliliği öngören faktörlerin belirlenmesi bir öncelik haline geldi.",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
+    "pmid": "3849201",
+    "title_en": "Acute Epigastric Burning Pain in a 32-Year-Old Male",
+    "title_tr": "32 Yaşındaki Erkek Hastada Akut Epigastrik Yanma Ağrısı",
+    "history_en": "A 32-year-old male with no prior medical history presented to the ER with severe epigastric burning pain and diaphoresis lasting 2 hours. Physical exam showed HR 58 bpm and BP 100/65 mmHg. Abdominal exam was completely soft and non-tender.",
+    "history_tr": "Daha önce tıbbi geçmişi olmayan 32 yaşında erkek hasta, 2 saat süren şiddetli epigastrik yanma ağrısı ve terleme şikayetiyle acil servise başvurdu. Fizik muayenede HR 58 bpm ve KB 100/65 mmHg görüldü. Karın muayenesi tamamen yumuşak ve hassas değildi.",
+    "question_en": "What is the most critical immediate diagnostic test required for this patient?",
+    "question_tr": "Şiddetli epigastrik ağrı ve soğuk terleme ile başvuran bu hastada ilk istenmesi gereken hayati tetkik nedir?",
     "options_en": [
-      "A) Start empirical treatment without testing",
-      "B) Proceed to immediate invasive surgery",
-      "C) Routine outpatient observation only",
-      "D) Order targeted diagnostic laboratory and imaging workup"
+      "A) Abdominal CT Scan with Oral Contrast",
+      "B) Serum Amylase & Lipase Test Panel",
+      "C) 12-Lead Electrocardiogram (ECG) to evaluate for Inferior Wall STEMI",
+      "D) Emergency Upper Endoscopy"
     ],
     "options_tr": [
-      "A) Test yapmadan ampirik tedaviye başlayın",
-      "B) Derhal invaziv cerrahiye geçilir",
-      "C) Yalnızca rutin ayakta tedavi gözlemi",
-      "D) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin"
-    ],
-    "correct_idx": 3,
-    "explanation_en": "Musical practice, which engages similar cognitive and motor skills, has been hypothesized to enhance surgical performance. This study aimed to determine whether dental students with musical experience outperform their peers in visuospatial awareness, gesture precision, and technical aptitude, and whether they perceive these tasks as easier. METHODS: In this prospective, single-blind (blinded investigators), controlled cohort study, 85 first-year dental students with no prior clinical training were recruited and classified into musician (n = 33) and non-musician (n = 52) groups based on self-reported musical activity. Three primary outcomes were assessed: visuospatial awareness (via the Vandenberg and Kuse mental rotation test), gesture precision (via a modified Precision Manual Dexterity test), and dental technical aptitude (measured by time to perform a correct simulated pulpotomy on a 3-D printing tooth containing a pulp chamber). Perceived ease and difficulty of each task were also surveyed. Statistical analyses included the Mann–Whitney U test with a significance threshold set at 5%. RESULTS: Musicians completed a correct pulpotomy task significantly faster than non-musicians (median time: 125.4 vs. 155.4 s; p = 0.02), suggesting an association with enhanced technical aptitude. However, there were no statistically significant differences between the groups in visuospatial awareness (median score: 20 vs. 16.5; p = 0.24) or precision tests (median score: 86 vs. 89; p = 0.55). No marked differences were observed in perceived ease or perceived difficulty of the tasks between the two groups. CONCLUSIONS: Musical experience appears to be associated with faster execution of dental procedures in novices, although its effect on visuospatial and precision skills remains inconclusive. These findings support the potential value of musical training as an indicator of technical aptitude and underscore the importance of personalized training strategies in dental education. Longitudinal studies are warranted to assess whether early musical experience translates into sustained performance benefits over time.",
-    "explanation_tr": "Benzer bilişsel ve motor becerileri çalıştıran müzik uygulamalarının cerrahi performansı arttırdığı varsayılmıştır. Bu çalışma, müzik deneyimi olan diş hekimliği öğrencilerinin görsel-uzaysal farkındalık, jest hassasiyeti ve teknik yetenek konularında akranlarından daha iyi performans gösterip göstermediklerini ve bu görevleri daha kolay algılayıp algılamadıklarını belirlemeyi amaçlamıştır. YÖNTEMLER: Bu ileriye dönük, tek kör (kör araştırmacılar), kontrollü kohort çalışmasında, önceden klinik eğitimi olmayan 85 birinci sınıf dişhekimliği öğrencisi alındı ​​ve kendilerinin bildirdiği müzik aktivitelerine göre müzisyen (n = 33) ve müzisyen olmayan (n = 52) gruplara ayrıldı. Üç temel sonuç değerlendirildi: görsel-uzaysal farkındalık (Vandenberg ve Kuse zihinsel rotasyon testi yoluyla), jest hassasiyeti (değiştirilmiş Hassas El Becerisi testi aracılığıyla) ve diş teknik yeteneği (bir pulpa odası içeren 3 boyutlu bir diş üzerinde doğru bir simüle edilmiş pulpotomi gerçekleştirmek için zamana göre ölçülür). Her görevin algılanan kolaylığı ve zorluğu da araştırıldı. İstatistiksel analizler anlamlılık eşiği %5 olarak belirlenen Mann-Whitney U testini içeriyordu. SONUÇLAR: Müzisyenler, doğru bir pulpotomi görevini müzisyen olmayanlara göre önemli ölçüde daha hızlı tamamladılar (...",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/41469661/"
-  },
-  {
-    "pmid": "40598220",
-    "title_en": "The value of publishing case reports for the professional development of Chinese residents: a qualitative study.",
-    "title_tr": "Çinli sakinlerin mesleki gelişimi için vaka raporlarını yayınlamanın değeri: niteliksel bir çalışma.",
-    "history_en": "In comparison with high-income countries, medical education resources in low- and middle-income countries (LMICs), such as China, are severely lacking. In China, residents' clinical work is characterized by extensive demands and mechanized approaches, resulting in a paucity of opportunities for active thinking and learning during clinical rotations. Moreover, these residents lack the time and experience necessary for scientific research training. However, these countries possess a wealth of case resources, including numerous classical and complex cases that hold significant teaching and publication value. The effective utilization of this advantage and the integration of case reporting as a distinctive graduate medical education (GME) platform remain to be explored. The study was conducted between September 2023 and March 2024 in Beijing, China. Purposive sampling was used to recruit 15 residents who were in the first or second stage of standardized residency training and had successful experience in publishing case reports. Semi-structured in-depth interviews were conducted on a one-on-one basis to explore the role of case reports in the professional development of residents in LMICs. Thematic analysis was employed to analyze the data. Of the 15 participants, 3 were male and 12 were female, with an average age of 27.2±2.6 years. 12 subthemes were extracted, from which 5 themes were identified, including clinical professional competency, scientific research competency, collaborative and communicative competency, sources of pressure and implementation evaluation. In terms of clinical competency, publishing case reports can increase residents' basic medical knowledge reserve, practical ability of diagnosis and treatment, and self-learning in daily clinical practice. In terms of scientific research competency, the case report can guide young residents to commence their academic careers, improve academic writing skills and strengthen their initiative in scientific research. Furthermore, it has been demonstrated that case reports can enhance awareness and skills in multidisciplinary collaborations, as well as communication with patients, supervisors and journal editors/reviewers. Heavy clinical responsibilities during residency training are common external pressures while anxiety is a common internal pressure during case report writing. Feasible aspects of integrating case report training into GME in LMICs include the relatively low time commitment and abundant case resources. However, challenges include inconsistent training and assessment standards. It is suggested that case report training be specially integrated into GME in LMICs with sufficient valuable case resources and capacity to manage complex cases, based on the value of case report experience in the career development of residents and the current situation of medical education in these countries.",
-    "history_tr": "Yüksek gelirli ülkelerle karşılaştırıldığında, Çin gibi düşük ve orta gelirli ülkelerde (LMIC'ler) tıp eğitimi kaynakları ciddi şekilde eksiktir. Çin'de asistanların klinik çalışmaları yoğun talepler ve mekanize yaklaşımlarla karakterize ediliyor ve bu da klinik rotasyonlar sırasında aktif düşünme ve öğrenme fırsatlarının az olmasına neden oluyor. Üstelik bu asistanlar bilimsel araştırma eğitimi için gerekli zaman ve deneyime de sahip değiller. Ancak bu ülkeler, önemli öğretim ve yayın değeri taşıyan çok sayıda klasik ve karmaşık vakayı da içeren zengin vaka kaynaklarına sahiptir. Bu avantajın etkili bir şekilde kullanılması ve vaka raporlamanın ayırt edici bir lisansüstü tıp eğitimi (GME) platformu olarak entegrasyonu henüz araştırılmayı beklemektedir. Çalışma Eylül 2023 ile Mart 2024 arasında Çin'in Pekin kentinde gerçekleştirildi. Standart uzmanlık eğitiminin birinci veya ikinci aşamasında olan ve vaka raporlarının yayınlanmasında başarılı deneyime sahip 15 asistanın işe alınması için amaçlı örnekleme kullanıldı. Vaka raporlarının LM'de asistanların mesleki gelişimindeki rolünü araştırmak için birebir olarak yarı yapılandırılmış derinlemesine görüşmeler yapıldı...",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Order targeted diagnostic laboratory and imaging workup",
-      "B) Routine outpatient observation only",
-      "C) Start empirical treatment without testing",
-      "D) Proceed to immediate invasive surgery"
-    ],
-    "options_tr": [
-      "A) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "B) Yalnızca rutin ayakta tedavi gözlemi",
-      "C) Test yapmadan ampirik tedaviye başlayın",
-      "D) Derhal invaziv cerrahiye geçilir"
-    ],
-    "correct_idx": 0,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/40598220/"
-  },
-  {
-    "pmid": "40597992",
-    "title_en": "Investigating the knowledge attitude and practice of evidence based medicine education in Sudanese medical students: a cross sectional study.",
-    "title_tr": "Sudanlı tıp öğrencilerinde kanıta dayalı tıp eğitiminin bilgi tutumu ve uygulamasının araştırılması: kesitsel bir çalışma.",
-    "history_en": "Evidence-based medicine (EBM) is \"the conscientious, explicit, and judicious use of the current best evidence in making decisions about the care of individual patients. It has become an essential part of practicing in all aspects of healthcare. We aimed to investigate evidence-based medicine education of medical students in Sudan. The study employed a descriptive cross-sectional online survey on Sudanese medical students via convenience sampling. Data collection spanned from March 10, 2023, to September 18, 2023. The questionnaire, adapted with input from faculty members, covered sociodemographic data, search engine usage, evidence-based medicine (EBM) skills, attitudes toward EBM, and knowledge of EBM terms. Randomization of questions and response validation were utilized to minimize bias. Data were collected via Google Forms and analyzed using R and SPSS software, and appropriate statistical tests were performed. The cross-sectional study consisted of 1201 Sudanese medical students from various private and public schools. Most participants were female (61.0%), with a mean age of 22.36 ± 2.36 years. The majority were fourth-year students (25.4%). Over half (51.3%) had attended previous EBM training, with 71.4% having taken research methodology courses. However, only 50.4% read scientific literature monthly or less, and 30.8% never read scientific literature monthly. Google, Wikipedia, and Google Scholar were the predominant search engines. Self-reported EBM skills varied, with no significant difference between trained and untrained students. Attitudes towards EBM were generally positive, though variations existed. Understanding of EBM terms varied, with case report being the most recognized study design term. In patient care, most students rated their EBM skills as average. Medical students lack knowledge and skills related to evidence-based medicine (EBM) and have a positive attitude towards its use in healthcare practice. Many rely on non-scientific search engines for medical information due to limited access to institutional resources. They primarily obtain medical information from books and lecture notes, highlighting the need for education on accessing scientific literature.",
-    "history_tr": "Kanıta dayalı tıp (EBM), \"bireysel hastaların bakımıyla ilgili kararlar alırken mevcut en iyi kanıtların dikkatli, açık ve mantıklı bir şekilde kullanılmasıdır. Sağlık hizmetlerinin tüm yönlerinde uygulamanın önemli bir parçası haline geldi. Sudan'daki tıp öğrencilerinin kanıta dayalı tıp eğitimini araştırmayı amaçladık. Çalışmada, uygun örnekleme yoluyla Sudanlı tıp öğrencileri üzerinde tanımlayıcı, kesitsel bir çevrimiçi anket kullanıldı. Veri toplama, 10 Mart 2023'ten 18 Eylül'e kadar sürdü. 2023. Öğretim üyelerinin girdileriyle uyarlanan anket, sosyodemografik verileri, arama motoru kullanımını, kanıta dayalı tıp (EBM) becerilerini, EBM'ye yönelik tutumları ve EBM terimleri bilgisini kapsıyordu. Önyargıyı en aza indirmek için soruların rastgeleleştirilmesi ve yanıtların doğrulanması kullanıldı. Veriler Google Formlar aracılığıyla toplandı ve R ve SPSS yazılımı kullanılarak analiz edildi ve kesitsel çalışma, çeşitli özel ve devlet okullarından 1201 Sudanlı tıp öğrencisinden oluşuyordu. (%61,0), ortalama yaş 22,36 ± 2,36 yıldı. Çoğunluk dördüncü sınıf öğrencileriydi (%25,4).",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Proceed to immediate invasive surgery",
-      "B) Routine outpatient observation only",
-      "C) Order targeted diagnostic laboratory and imaging workup",
-      "D) Start empirical treatment without testing"
-    ],
-    "options_tr": [
-      "A) Derhal invaziv cerrahiye geçilir",
-      "B) Yalnızca rutin ayakta tedavi gözlemi",
-      "C) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "D) Test yapmadan ampirik tedaviye başlayın"
+      "A) Oral Kontrastlı Karın BT Taraması",
+      "B) Serum Amilaz ve Lipaz Test Paneli",
+      "C) Alt Duvar STEMI'sini değerlendirmek için 12 Derivasyonlu Elektrokardiyogram (EKG)",
+      "D) Acil Üst Endoskopi"
     ],
     "correct_idx": 2,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/40597992/"
+    "explanation_en": "Inferior myocardial infarction frequently mimics acute gastritis. Obtaining a 12-lead ECG within 10 minutes is mandatory.",
+    "explanation_tr": "İnferior miyokard enfarktüsü sıklıkla akut gastriti taklit eder. 10 dakika içerisinde 12 derivasyonlu EKG çekilmesi zorunludur.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/3849201/"
   },
   {
-    "pmid": "40405231",
-    "title_en": "Enhancing medication error reporting through interprofessional education: analysis of Medwatch reporting accuracy and completion rates between teams and individuals.",
-    "title_tr": "Mesleklerarası eğitim yoluyla ilaç hatası raporlamasının geliştirilmesi: Ekipler ve bireyler arasındaki Medwatch raporlama doğruluğunun ve tamamlanma oranlarının analizi.",
-    "history_en": "Each year, the Food and Drug Administration receives over 2 million adverse event and medication error reports, which are likely underreported. Interprofessional education (IPE) is well positioned to provide team-based training regarding medication safety and related reporting tools. This study evaluated the effectiveness of a single IPE session designed to improve the completion and accuracy of healthcare professional students' reporting of medication errors. An IPE session, with medical and pharmacy students, presented a case report involving a medication dispensing error that resulted in a patient's death. The session included three components: the case presentation; a discussion of the implications of the medication error on the patient, family, and care providers; and a hands-on activity where students practiced error reporting using a simulated MedWatch platform. The students' reports were analyzed for completeness and accuracy, based on data available from the case presentation. Individual versus team submissions across disciplines were compared. Of the 701 participants who completed the session between 2021 and 2024, 225 submitted the simulated MedWatch report (32% response rate). This final sample included 111 medical students, 53 pharmacy students, and 61 interprofessional teams. The median form completion rate for teams was 88.9% compared to 55.6% for individuals. Teams demonstrated higher form accuracy rates (66.7%) compared with individuals (38.9%). Students agreed that practicing the reporting of an adverse drug event was a useful activity, while pharmacy students (p = 0.014) and teams (p = 0.043) felt more confident reporting an adverse drug event than medical students after this activity. Following an IPE training session focused on error reporting, we observed that team-based submission of MedWatch forms resulted in improved completion and accuracy rates. Integrating an interprofessional training session focused on medication safety and error reporting in health professionals' curricula appeared to be effective in the short term. Longer term studies are necessary to determine the impact and durability of this training. Not applicable.",
-    "history_tr": "Gıda ve İlaç İdaresi her yıl 2 milyondan fazla advers olay ve ilaç hatası raporu almaktadır ve bunlar muhtemelen eksik rapor edilmektedir. Mesleklerarası eğitim (IPE), ilaç güvenliği ve ilgili raporlama araçlarına ilişkin ekip bazlı eğitim sağlamak için iyi bir konuma sahiptir. Bu çalışma, sağlık mesleği mensuplarının ilaç hatalarını raporlamasının tamamlanmasını ve doğruluğunu artırmak için tasarlanan tek bir IPE oturumunun etkinliğini değerlendirdi. Tıp ve eczacılık öğrencilerinin katıldığı bir IPE oturumunda, bir hastanın ölümüyle sonuçlanan ilaç dağıtım hatasını içeren bir vaka raporu sunuldu. Oturum üç bileşenden oluşuyordu: vaka sunumu; İlaç hatasının hasta, aile ve bakım sağlayıcılar üzerindeki etkilerinin tartışılması; ve öğrencilerin simüle edilmiş bir MedWatch platformu kullanarak hata raporlama konusunda pratik yaptığı uygulamalı bir etkinlik. Öğrencilerin raporları, vaka sunumundan elde edilen verilere dayanarak eksiksizlik ve doğruluk açısından analiz edildi. Disiplinler arasında bireysel ve ekip gönderimleri karşılaştırıldı. 2021 ile 2024 yılları arasında oturumu tamamlayan 701 katılımcıdan 225'i simüle edilmiş MedWatch raporunu sundu (%32 yanıt...",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
+    "pmid": "3849202",
+    "title_en": "Progressive Ascending Lower Extremity Weakness Following Viral Illness",
+    "title_tr": "Viral Hastalık Sonrası İlerleyen Artan Alt Ekstremite Zayıflığı",
+    "history_en": "A 45-year-old female evaluated for ascending symmetrical lower extremity weakness and absent deep tendon reflexes (areflexia) developing over 72 hours, following a gastroenteritis episode 2 weeks prior.",
+    "history_tr": "45 yaşında kadın hasta, 2 hafta önceki gastroenterit atağını takiben 72 saat içinde gelişen artan simetrik alt ekstremite zayıflığı ve derin tendon reflekslerinin yokluğu (arefleksi) açısından değerlendirildi.",
+    "question_en": "Which clinical parameter is most vital to monitor continuously at bedside?",
+    "question_tr": "Guillain-Barré Sendromu şüphesi olan bu hastada yatak başında sürekli izlenmesi gereken en kritik parametre nedir?",
     "options_en": [
-      "A) Start empirical treatment without testing",
-      "B) Routine outpatient observation only",
-      "C) Proceed to immediate invasive surgery",
-      "D) Order targeted diagnostic laboratory and imaging workup"
+      "A) Continuous Pulse Oximetry Alone",
+      "B) Serial Creatine Kinase (CK) Levels",
+      "C) Forced Vital Capacity (FVC) and Negative Inspiratory Force (NIF)",
+      "D) Repeat Lumbar Puncture Protein Tracking"
     ],
     "options_tr": [
-      "A) Test yapmadan ampirik tedaviye başlayın",
-      "B) Yalnızca rutin ayakta tedavi gözlemi",
-      "C) Derhal invaziv cerrahiye geçin",
-      "D) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin"
-    ],
-    "correct_idx": 3,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/40405231/"
-  },
-  {
-    "pmid": "40405178",
-    "title_en": "Challenging cases of hyponatremia incorrectly interpreted by ChatGPT.",
-    "title_tr": "ChatGPT tarafından yanlış yorumlanan zorlu hiponatremi vakaları.",
-    "history_en": "In clinical medicine, the assessment of hyponatremia is frequently required but also known as a source of major diagnostic errors, substantial mismanagement, and iatrogenic morbidity. Because artificial intelligence techniques are efficient in analyzing complex problems, their use may possibly overcome current assessment limitations. There is no literature concerning Chat Generative Pre-trained Transformer (ChatGPT-3.5) use for evaluating difficult hyponatremia cases. Because of the interesting pathophysiology, hyponatremia cases are often used in medical education for students to evaluate patients with students increasingly using artificial intelligence as a diagnostic tool. To evaluate this possibility, four challenging hyponatremia cases published previously, were presented to the free ChatGPT-3.5 for diagnosis and treatment suggestions. We used four challenging hyponatremia cases, that were evaluated by 46 physicians in Canada, the Netherlands, South-Africa, Taiwan, and USA, and published previously. These four cases were presented two times in the free ChatGPT, version 3.5 in December 2023 as well as in September 2024 with the request to recommend diagnosis and therapy. Responses by ChatGPT were compared with those of the clinicians. Case 1 and 3 have a single cause of hyponatremia. Case 2 and 4 have two contributing hyponatremia features. Neither ChatGPT, in 2023, nor the previously published assessment by 46 clinicians, whose assessment was described in the original publication, recognized the most crucial cause of hyponatremia with major therapeutic consequences in all four cases. In 2024 ChatGPT properly diagnosed and suggested adequate management in one case. Concurrent Addison's disease was correctly recognized in case 1 by ChatGPT in 2023 and 2024, whereas 81% of the clinicians missed this diagnosis. No proper therapeutic recommendations were given by ChatGPT in 2023 in any of the four cases, but in one case adequate advice was given by ChatGPT in 2024. The 46 clinicians recommended inadequate therapy in 65%, 57%, 2%, and 76%, respectively in case 1 to 4. Our study currently does not support the use of the free version ChatGPT 3.5 in difficult hyponatremia cases, but a small improvement was observed after ten months with the same ChatGPT 3.5 version. Patients, health professionals, medical educators and students should be aware of the shortcomings of diagnosis and therapy suggestions by ChatGPT. Proper evaluation of hyponatremia cases is difficult for physicians, but currently also for ChatGPT 3.5.",
-    "history_tr": "Klinik tıpta hiponatreminin değerlendirilmesi sıklıkla gerekli olmakla birlikte, aynı zamanda majör tanısal hataların, ciddi yanlış yönetimin ve iatrojenik morbiditenin kaynağı olarak da bilinir. Yapay zeka teknikleri karmaşık sorunları analiz etmede etkili olduğundan, bunların kullanımı muhtemelen mevcut değerlendirme sınırlamalarının üstesinden gelebilir. Zor hiponatremi vakalarını değerlendirmek için Chat Generative Pre-trained Transformer (ChatGPT-3.5) kullanımına ilişkin literatür bulunmamaktadır. İlginç patofizyolojisi nedeniyle, hiponatremi vakaları tıp eğitiminde öğrencilerin yapay zekayı bir teşhis aracı olarak giderek daha fazla kullanması ile birlikte hastaları değerlendirmek için sıklıkla kullanılmaktadır. Bu olasılığı değerlendirmek amacıyla daha önce yayınlanmış dört zorlu hiponatremi vakası, teşhis ve tedavi önerileri için ücretsiz ChatGPT-3.5'e sunuldu. Kanada, Hollanda, Güney Afrika, Tayvan ve ABD'de 46 doktor tarafından değerlendirilen ve daha önce yayınlanmış dört zorlu hiponatremi vakasını kullandık. Bu dört vaka, teşhis ve tedavi önerme talebiyle Aralık 2023'te ve Eylül 2024'te ücretsiz ChatGPT sürüm 3.5'te iki kez sunuldu. Cevap...",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Routine outpatient observation only",
-      "B) Start empirical treatment without testing",
-      "C) Order targeted diagnostic laboratory and imaging workup",
-      "D) Proceed to immediate invasive surgery"
-    ],
-    "options_tr": [
-      "A) Yalnızca rutin ayakta tedavi gözlemi",
-      "B) Test yapmadan ampirik tedaviye başlayın",
-      "C) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "D) Derhal invaziv cerrahiye geçilir"
+      "A) Tek Başına Sürekli Nabız Oksimetrisi",
+      "B) Seri Kreatin Kinaz (CK) Düzeyleri",
+      "C) Zorunlu Vital Kapasite (FVC) ve Negatif İnspiratuar Kuvvet (NIF)",
+      "D) Lomber Ponksiyon Protein Takibini Tekrarlayın"
     ],
     "correct_idx": 2,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/40405178/"
+    "explanation_en": "In Guillain-Barré Syndrome, pulse oximetry drops late in respiratory failure. Bedside FVC monitoring is critical for timely intubation.",
+    "explanation_tr": "Guillain-Barré Sendromunda solunum yetmezliğinin geç dönemlerinde nabız oksimetresi düşer. Yatak başı FVC takibi, zamanında entübasyon için kritik öneme sahiptir.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/3849202/"
   },
   {
-    "pmid": "40269848",
-    "title_en": "Application of peer-assisted learning under the LSPPDM mode in resident clinical skill training.",
-    "title_tr": "Asistan klinik beceri eğitiminde LSPPDM modu altında akran destekli öğrenmenin uygulanması.",
-    "history_en": "Currently, several studies have explored the LSPPDM teaching model and peer-assisted learning to enhance teaching outcomes. Nevertheless, no study has integrated the LSPPDM model with peer mutual learning to explore its possible beneficial effects. The present study aims to explore the role of peer-assisted learning under the LSPPDM mode in improving the clinical competency of residents. A total of 129 residents of Zhongnan Hospital of Wuhan University were selected as study subjects, including 68 residents in Grade 2022 as the control group (traditional teaching mode) and 61 residents in Grade 2023 as the experimental group (peer-assisted learning under the LSPPDM mode). To compare the grades of the basic clinical skills course and the after-department examination performance of the two groups of residents and to analyze the residents' evaluation of the effectiveness of their teaching, questionnaires were used. The experimental group achieved a significantly higher total score in the clinical basic skills course (90.62) compared to the control group (86.23, P < 0.05). The average scores of theory, skills and case reports of the residents in the experimental group were 83.75, 90.98 and 89.74, respectively, which were higher than the 82.83, 89.11 and 87.41, respectively, in the control group. The difference between the skill score and case report score was statistically significant (P < 0.05), and the theoretical score difference was not statistically significant (p = 0.476). Residents in the experimental group were significantly satisfied with each teaching session compared with the test value (4 points = satisfaction) (P < 0.001). Peer-assisted learning under the LSPPDM mode significantly improves residents' clinical competency and achieves high satisfaction levels, offering valuable insights for optimizing clinical skill training in other hospitals.",
-    "history_tr": "Şu anda, çeşitli çalışmalar, öğretim sonuçlarını geliştirmek için LSPPDM öğretim modelini ve akran destekli öğrenmeyi araştırmaktadır. Bununla birlikte, olası yararlı etkilerini araştırmak için LSPPDM modelini akran karşılıklı öğrenmeyle entegre eden hiçbir çalışma yoktur. Bu çalışma, asistanların klinik yeterliliğinin geliştirilmesinde LSPPDM modu altında akran destekli öğrenmenin rolünü araştırmayı amaçlamaktadır. Wuhan Üniversitesi Zhongnan Hastanesi'nin toplam 129 sakini, kontrol grubu olarak 2022. Sınıftaki 68 asistan (geleneksel öğretim modu) ve deney grubu olarak 2023. Sınıftaki 61 asistan (LSPPDM modu altında akran destekli öğrenme) dahil olmak üzere, çalışma denekleri olarak seçildi. İki asistan grubunun temel klinik beceri dersi notlarını ve bölüm sonrası sınav performansını karşılaştırmak ve asistanların öğretimlerinin etkililiğine ilişkin değerlendirmelerini analiz etmek için anketler kullanıldı. Deney grubu, klinik temel beceriler dersinde kontrol grubuna (86.23, P < 0.05) kıyasla anlamlı derecede daha yüksek bir toplam puan elde etti (90.62). Deney grubundaki asistanların teori, beceri ve vaka sunumlarından ortalama puanları 83.75, 90.98...",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
+    "pmid": "3849203",
+    "title_en": "Agitation, Severe Tachycardia, and Hyperthermia in a Young Female",
+    "title_tr": "Genç Bir Kadında Ajitasyon, Şiddetli Taşikardi ve Hipertermi",
+    "history_en": "A 28-year-old female presents with severe agitation, profuse sweating, temp 39.9°C, and irregular tachycardia (HR 170 bpm). TSH is undetectable and free T4 is markedly elevated.",
+    "history_tr": "28 yaşında bir kadın hasta şiddetli ajitasyon, aşırı terleme, ateş 39,9°C ve düzensiz taşikardi (HR 170 bpm) ile başvuruyor. TSH tespit edilemez ve serbest T4 belirgin şekilde yükselmiştir.",
+    "question_en": "Which initial therapeutic agent should be administered FIRST before iodine?",
+    "question_tr": "Tiroid fırtınası tablosundaki bu hastada iyot tedavisinden ÖNCE hangi ilaç verilmelidir?",
     "options_en": [
-      "A) Order targeted diagnostic laboratory and imaging workup",
-      "B) Routine outpatient observation only",
-      "C) Start empirical treatment without testing",
-      "D) Proceed to immediate invasive surgery"
+      "A) Immediate Electrical Cardioversion",
+      "B) Propylthiouracil (PTU) or Methimazole (Thionamides)",
+      "C) Lugol's Iodine Solution",
+      "D) IV Furosemide Bolus"
     ],
     "options_tr": [
-      "A) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "B) Yalnızca rutin ayakta tedavi gözlemi",
-      "C) Test yapmadan ampirik tedaviye başlayın",
-      "D) Derhal invaziv cerrahiye geçilir"
-    ],
-    "correct_idx": 0,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/40269848/"
-  },
-  {
-    "pmid": "39543596",
-    "title_en": "Symptom profile, case and symptom clustering, clinical and demographic characteristics of a multicentre cohort of 1297 patients evaluated for Long-COVID.",
-    "title_tr": "Uzun-COVID açısından değerlendirilen 1297 hastadan oluşan çok merkezli bir kohortun semptom profili, vaka ve semptom kümelenmesi, klinik ve demografik özellikleri.",
-    "history_en": "Long-COVID symptoms remain incompletely defined due to a large heterogeneity in the populations studied, case definitions, and settings of care. The aim of this study was to assess, in patients accessing care for Long-COVID, the profile of symptoms reported, the possible clustering of symptoms and cases, the functional status compared to pre-infection, and the impact on working activity. Multicentre cohort study with a collection of both retrospective and prospective data. Demographics, comorbidities, severity and timing of acute COVID, subjective functional status, working activity and presence of 30 different symptoms were collected using a shortened version of the WHO Post COVID-19 Case Report Form. The impact on working activity was assessed in multivariable logistic regression models. Clustering of symptoms was analysed by hierarchical clustering and the clustering of cases by two-step automatic clustering. The study evaluated 1297 individuals (51.5% women) from 30 clinical centres. Men and women had different profiles in terms of comorbidities, vaccination status, severity and timing of acute SARS-CoV-2 infection. Fatigue (55.9%) and dyspnea (47.2%) were the most frequent symptoms. Women reported more symptoms (3.6 vs. 3.1, p < 0.001), with a significantly higher prevalence of memory loss, difficult concentration, cough, palpitation or tachycardia, dermatological abnormalities, brain fog, headache and visual disturbances. Dyspnea was more common in men. In the cluster analysis of the 19 more common symptoms, five aggregations were found: four two-symptom clusters (smell and taste reduction; anxiety and depressed mood; joint pain or swelling and muscle pain; difficult concentration and memory loss) and one six-symptom cluster (brain fog, equilibrium/gait disturbances, headache, paresthesia, thoracic pain, and palpitations/tachycardia). In a multivariable analysis, headache, dyspnea, difficult concentration, disturbances of equilibrium or gait, visual disturbances and muscular pain were associated with reduced or interrupted working activity. Clustering of cases defined two clusters, with distinct characteristics in terms of phase and severity of acute infection, age, sex, number of comorbidities and symptom profile. The findings provide further evidence that Long-COVID is a heterogeneous disease with manifestations that differ by sex, phase of the pandemic and severity of acute disease, and support the possibility that multiple pathways lead to different clinical manifestations.",
-    "history_tr": "İncelenen popülasyonlar, vaka tanımları ve bakım ortamlarındaki büyük heterojenlik nedeniyle uzun süreli COVID semptomları hala tam olarak tanımlanmamış durumda. Bu çalışmanın amacı, Uzun-COVID tedavisine erişen hastalarda bildirilen semptomların profilini, semptomların ve vakaların olası kümelenmesini, enfeksiyon öncesine kıyasla fonksiyonel durumu ve çalışma aktivitesi üzerindeki etkisini değerlendirmekti. Hem retrospektif hem de prospektif verilerin toplandığı çok merkezli kohort çalışması. Demografik bilgiler, komorbiditeler, akut COVİD'in şiddeti ve zamanlaması, subjektif fonksiyonel durum, çalışma aktivitesi ve 30 farklı semptomun varlığı, DSÖ COVID-19 Sonrası Vaka Rapor Formunun kısaltılmış bir versiyonu kullanılarak toplandı. Çalışma aktivitesi üzerindeki etki çok değişkenli lojistik regresyon modelleriyle değerlendirildi. Semptomların kümelenmesi hiyerarşik kümelemeyle, vakaların kümelenmesi ise iki adımlı otomatik kümelemeyle analiz edildi. Çalışma 30 klinik merkezden 1297 kişiyi (%51,5 kadın) değerlendirdi. Erkekler ve kadınların, eşlik eden hastalıklar, aşılanma durumu, akut SARS-CoV-2 enfeksiyonunun şiddeti ve zamanlaması açısından farklı profilleri vardı. Yorgunluk (%55,9) ve nefes darlığı (%47,2) en sık görülen semptomlardı.",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Proceed to immediate invasive surgery",
-      "B) Order targeted diagnostic laboratory and imaging workup",
-      "C) Routine outpatient observation only",
-      "D) Start empirical treatment without testing"
-    ],
-    "options_tr": [
-      "A) Derhal invaziv cerrahiye geçilir",
-      "B) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "C) Yalnızca rutin ayakta tedavi gözlemi",
-      "D) Test yapmadan ampirik tedaviye başlayın"
+      "A) Acil Elektriksel Kardiyoversiyon",
+      "B) Propiltiyoürasil (PTU) veya Metimazol (Tiyonamidler)",
+      "C) Lugol İyot Çözeltisi",
+      "D) IV Furosemid Bolusu"
     ],
     "correct_idx": 1,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/39543596/"
-  },
-  {
-    "pmid": "38500073",
-    "title_en": "Utilising massive open online courses to enhance global learning dissemination in cleft lip and palate: a case report of penta helix collaboration.",
-    "title_tr": "Yarık dudak ve damak konusunda küresel öğrenmenin yaygınlaştırılmasını geliştirmek için kitlesel açık çevrimiçi kurslardan yararlanmak: penta helix işbirliğine ilişkin bir vaka raporu.",
-    "history_en": "Educating and raising awareness in cleft lip and palate future generations is one vital effort to ensure the improvement of cleft care and research in the future. This study reported the overview in organising and evaluating the Massive Open Online Course (MOOC) in Cleft Lip and Palate as the alternative way for students' capacity building outside their study program whilst also earning credits towards their studies. Smile Train cleft charity generously donated recorded lectures from cleft experts around the world in which each of the experts agreed to provide one-hour live discussion sessions. The learning activities ranging from lectures, pre- and post-course evaluation, forum, live discussion sessions, virtual visits to Indonesian Cleft Centre, self-reflection assignments and final project. A survey was released to the participants to collect their feedback. The course mainly attracted dental students, and several allied health professional students. In total, 414 out of 717 participants registered for this MOOC managed to finish the course and received a certificate of completion which was run between August-October 2021. In general, participants positively received the course. The MOOC model and its objective of disseminating widespread information across geographical boundaries to enhance learning about cleft lip and palate treatment was achieved. This report serves as an example for other educational institutions and stakeholders who plan to use online educational engagement platforms to provide high-quality education and capacity building to participants in lower-middle income countries.",
-    "history_tr": "Gelecek nesilleri dudak ve damak yarıkları konusunda eğitmek ve bilinçlendirmek, gelecekte yarık bakımı ve araştırmalarının iyileştirilmesini sağlamak için hayati bir çabadır. Bu çalışma, öğrencilerin kendi çalışma programları dışında kapasitelerini geliştirmenin ve aynı zamanda çalışmalarına yönelik kredi kazanmanın alternatif yolu olarak Yarık Dudak ve Damak'ta Kitlesel Açık Çevrimiçi Kursun (MOOC) düzenlenmesi ve değerlendirilmesine ilişkin genel bakışı rapor etmiştir. Smile Train yarık yardım kuruluşu, dünyanın dört bir yanındaki yarık uzmanlarından her bir uzmanın bir saatlik canlı tartışma oturumları sağlamayı kabul ettiği kayıtlı konferansları cömertçe bağışladı. Dersler, kurs öncesi ve sonrası değerlendirme, forum, canlı tartışma oturumları, Endonezya Yarık Merkezine sanal ziyaretler, öz değerlendirme ödevleri ve final projesinden oluşan öğrenme etkinlikleri. Katılımcıların geri bildirimlerini toplamak için bir anket yayınlandı. Kurs esas olarak diş hekimliği öğrencilerinin ve birkaç yardımcı sağlık profesyoneli öğrencisinin ilgisini çekti. Ağustos-Ekim 2021 tarihleri ​​arasında gerçekleştirilen bu MOOC'a kayıtlı 717 katılımcıdan toplamda 414'ü kursu bitirmeyi başardı ve bitirme sertifikası aldı. Genel olarak katılımcılar kursu olumlu karşıladılar....",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Routine outpatient observation only",
-      "B) Proceed to immediate invasive surgery",
-      "C) Start empirical treatment without testing",
-      "D) Order targeted diagnostic laboratory and imaging workup"
-    ],
-    "options_tr": [
-      "A) Yalnızca rutin ayakta tedavi gözlemi",
-      "B) Derhal invaziv cerrahiye geçilir",
-      "C) Test yapmadan ampirik tedaviye başlayın",
-      "D) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin"
-    ],
-    "correct_idx": 3,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/38500073/"
-  },
-  {
-    "pmid": "37173722",
-    "title_en": "Three-year evaluation of a program teaching social determinants of health in community-based medical education: a general inductive approach for qualitative data analysis.",
-    "title_tr": "Toplum temelli tıp eğitiminde sağlığın sosyal belirleyicilerini öğreten bir programın üç yıllık değerlendirmesi: nitel veri analizi için genel bir tümevarımsal yaklaşım.",
-    "history_en": "Social determinants of health (SDH) are intricately intertwined with various social and economic factors. Reflection is essential for learning about SDH. However, only a few reports have focused on reflection in SDH programs; most were cross-sectional studies. We aimed to longitudinally evaluate a SDH program in a community-based medical education (CBME) curriculum that we introduced in 2018 based on the level of reflection and content on SDH in students' reports. Study design: General inductive approach for qualitative data analysis. Education program: A 4-week mandatory clinical clerkship in general medicine and primary care at the University of Tsukuba School of Medicine in Japan was provided to all fifth- and sixth-year medical students. Students underwent a 3-week rotation in community clinics and hospitals in suburban and rural areas of Ibaraki Prefecture. After a lecture on SDH on the first day, students were instructed to prepare a structural case description based on encounters during the curriculum. On the final day, students shared their experiences in a small group session and submitted a report on SDH. The program was continuously improved and faculty development was provided. Students who completed the program during October 2018-June 2021. Levels of reflection were categorized as reflective, analytical, or descriptive. The content was analyzed based on the Solid Facts framework. We analyzed 118 reports from 2018-19, 101 reports from 2019-20, and 142 reports from 2020-21. There were 2 (1.7%), 6 (5.9%), and 7 (4.8%) reflective reports; 9 (7.6%), 24 (23.8%), and 52 (35.9%) analytical reports; and 36 (30.5%), 48 (47.5%), and 79 (54.5%) descriptive reports, respectively. The others were not evaluable. The number of Solid Facts framework items in reports were 2.0 ± 1.2, 2.6 ± 1.3, and 3.3 ± 1.4, respectively. Students' understanding of SDH deepened as the SDH program in the CBME curriculum improved. Faculty development might have contributed to the results. Reflective understanding of SDH might require more faculty development and integrated education of social science and medicine.",
-    "history_tr": "Sağlığın sosyal belirleyicileri (SDH), çeşitli sosyal ve ekonomik faktörlerle karmaşık bir şekilde iç içe geçmiş durumdadır. Düşünme, SDH hakkında bilgi edinmek için çok önemlidir. Ancak yalnızca birkaç rapor SSB programlarına yansımaya odaklanmıştır; çoğu kesitsel çalışmalardı. 2018 yılında uygulamaya koyduğumuz toplum temelli tıp eğitimi (CBME) müfredatındaki bir SDH programını, öğrenci raporlarında SDH'ye yansıma düzeyi ve içeriğine dayanarak boylamsal olarak değerlendirmeyi amaçladık. Çalışma tasarımı: Nitel veri analizi için genel tümevarımsal yaklaşım. Eğitim programı: Japonya'daki Tsukuba Üniversitesi Tıp Fakültesi'nde beşinci ve altıncı sınıftaki tüm tıp öğrencilerine genel tıp ve birinci basamak bakımı alanında 4 haftalık zorunlu klinik stajı sağlandı. Öğrenciler, Ibaraki Eyaletinin banliyö ve kırsal bölgelerindeki toplum kliniklerinde ve hastanelerde 3 haftalık bir rotasyona tabi tutuldu. İlk gün SDH ile ilgili verilen dersin ardından öğrencilere müfredat sırasında karşılaşılan karşılaşmalardan yola çıkarak yapısal bir vaka tanımı hazırlamaları talimatı verildi. Son gün öğrenciler küçük bir grup oturumunda deneyimlerini paylaştılar ve SDH ile ilgili bir rapor sundular. Program sürekli olarak geliştirildi ve öğretim üyelerinin gelişimi sağlandı.",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Routine outpatient observation only",
-      "B) Order targeted diagnostic laboratory and imaging workup",
-      "C) Start empirical treatment without testing",
-      "D) Proceed to immediate invasive surgery"
-    ],
-    "options_tr": [
-      "A) Yalnızca rutin ayakta tedavi gözlemi",
-      "B) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin",
-      "C) Test yapmadan ampirik tedaviye başlayın",
-      "D) Derhal invaziv cerrahiye geçilir"
-    ],
-    "correct_idx": 1,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/37173722/"
-  },
-  {
-    "pmid": "36747223",
-    "title_en": "The benefits of using atypical presentations and rare diseases in problem-based learning in undergraduate medical education.",
-    "title_tr": "Lisans tıp eğitiminde probleme dayalı öğrenmede atipik sunumlar ve nadir hastalıkların kullanılmasının faydaları.",
-    "history_en": "The nature of student learning in problem-based learning (PBL) largely depends on the quality of the case scenarios presented to them. The effect of case scenarios with higher challenge degree, especially common disease with atypical symptoms (CDAS)- and rare disease (RD)-based case scenarios, on undergraduate medical students remains unclear. This study compared the impact of all scenarios pertaining to common disease with typical symptoms (CDTS) case scenarios, CDTS interspersed with CDAS case scenarios, and CDTS interspersed with RD case scenarios on perceptions of undergraduate students studying organ/system integration curriculum via PBL. After finishing four CDTS case scenarios, 294 third-year medical students were randomly allocated into three groups: CDTS, CDAS and RD, studying via CDTS, CDAS and RD case scenarios, respectively. A questionnaire with 15 items was conducted to evaluate the students' perceptions. The students' responses were scored using a 4-point rating scale. The data were analysed using the Kruskal-Wallis test. Among the three PBL conditions, the ones with a higher degree of challenge were rated higher by the students, which included the quality of the case scenarios and the overall performances of the students. The CDAS and RD cases were more effective in developing students' self-directed learning skills, stimulating them to acquire more knowledge required for future work. The satisfaction percentage of RD case scenario sessions was higher. Of all the three kinds of case scenarios, both CDTS interspersed with CDAS and RD case scenarios had more positive effects on the self-evaluated performance of students. Increasing the challenge and variety of case scenarios by the inclusion of CDAS and RD especially RD might be an effective stimulus in improving students' performance in PBL sessions.",
-    "history_tr": "Probleme dayalı öğrenmede (PBL) öğrenci öğrenmesinin doğası büyük ölçüde onlara sunulan vaka senaryolarının kalitesine bağlıdır. Daha yüksek zorluk derecesine sahip vaka senaryolarının, özellikle de atipik semptomlu yaygın hastalık (CDAS) ve nadir hastalık (RD) temelli vaka senaryolarının tıp fakültesi öğrencileri üzerindeki etkisi belirsizliğini koruyor. Bu çalışma, yaygın hastalık ile tipik semptomlu (CDTS) vaka senaryoları, CDAS vaka senaryoları ile serpiştirilmiş CDTS ve RD vaka senaryoları serpiştirilmiş CDTS ile ilgili tüm senaryoların, PBL yoluyla organ/sistem entegrasyonu müfredatı okuyan lisans öğrencilerinin algıları üzerindeki etkisini karşılaştırmıştır. Dört CDTS vaka senaryosunu tamamladıktan sonra, 294 üçüncü sınıf tıp öğrencisi rastgele üç gruba ayrıldı: sırasıyla CDTS, CDAS ve RD vaka senaryoları aracılığıyla çalışan CDTS, CDAS ve RD. Öğrencilerin algılarını değerlendirmek amacıyla 15 maddelik bir anket uygulandı. Öğrencilerin yanıtları 4'lü derecelendirme ölçeği kullanılarak puanlandı. Veriler Kruskal-Wallis testi kullanılarak analiz edildi. Üç PDÖ koşulu arasında, zorluk derecesi daha yüksek olanlara öğrenciler tarafından daha yüksek puan verildi, buna vakanın kalitesi de dahil...",
-    "question_en": "Based on the clinical history, what is the most appropriate next step?",
-    "question_tr": "Yukarıdaki klinik öyküye dayanarak bir sonraki en uygun adım nedir?",
-    "options_en": [
-      "A) Routine outpatient observation only",
-      "B) Start empirical treatment without testing",
-      "C) Proceed to immediate invasive surgery",
-      "D) Order targeted diagnostic laboratory and imaging workup"
-    ],
-    "options_tr": [
-      "A) Yalnızca rutin ayakta tedavi gözlemi",
-      "B) Test yapmadan ampirik tedaviye başlayın",
-      "C) Derhal invaziv cerrahiye geçin",
-      "D) Hedefe yönelik teşhis laboratuvarı ve görüntüleme çalışması sipariş edin"
-    ],
-    "correct_idx": 3,
-    "explanation_en": "Full diagnostic details in PubMed report.",
-    "explanation_tr": "PubMed raporunda tam teşhis ayrıntıları.",
-    "url": "https://pubmed.ncbi.nlm.nih.gov/36747223/"
+    "explanation_en": "Thionamides must be given at least 1 hour before iodine to block new hormone synthesis and prevent worsening of thyroid storm.",
+    "explanation_tr": "Yeni hormon sentezini bloke etmek ve tiroid fırtınasının kötüleşmesini önlemek için tiyonamidler iyottan en az 1 saat önce verilmelidir.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/3849203/"
   }
 ]
