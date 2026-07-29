@@ -11,10 +11,11 @@ PUBMED_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcg
 def fetch_real_cases():
     cases = []
     try:
+        # En son yayınlanan 15 açık erişimli vakayı çek
         params = {
             "db": "pubmed",
             "term": "case report[Publication Type] AND free full text[sb]",
-            "retmax": "6",
+            "retmax": "15",
             "sort": "pub_date",
             "retmode": "json"
         }
@@ -46,40 +47,6 @@ def fetch_real_cases():
     except Exception as e:
         print(f"API Error: {e}")
 
-    # Veri gelmezse veya az gelirse yedek klinik vakalar (Zenginleştirilmiş)
-    if len(cases) < 3:
-        cases = [
-            {
-                "pmid": "3849201",
-                "title_en": "Acute Inferior Myocardial Infarction Presenting as Isolated Epigastric Pain",
-                "history_en": "A 32-year-old male presented to the emergency room with severe epigastric burning pain and mild diaphoresis lasting for 2 hours, initially misdiagnosed as acute gastritis.",
-                "question_en": "What is the most critical initial diagnostic step for this patient?",
-                "options_en": ["A) 12-Lead Electrocardiogram (ECG)", "B) Emergency Upper Endoscopy", "C) Oral Antacid Administration", "D) Abdominal Ultrasound"],
-                "correct_idx": 0,
-                "explanation_en": "Atypical presentations of inferior wall MI often mimic gastrointestinal symptoms. A 12-lead ECG within 10 minutes of arrival is mandatory.",
-                "url": "https://pubmed.ncbi.nlm.nih.gov/3849201/"
-            },
-            {
-                "pmid": "3849202",
-                "title_en": "Guillain-Barré Syndrome Following Acute Viral Upper Respiratory Infection",
-                "history_en": "A 45-year-old female presents with progressive symmetrical lower extremity weakness and paresthesia developing over 48 hours, 2 weeks after an upper respiratory infection.",
-                "question_en": "Which bedside clinical test is most essential to monitor for impending respiratory failure?",
-                "options_en": ["A) Forced Vital Capacity (FVC) & NIF", "B) Serial Arterial Blood Gas", "C) Repeat Lumbar Puncture", "D) Continuous Pulse Oximetry Only"],
-                "correct_idx": 0,
-                "explanation_en": "Pulse oximetry drops late in neuromuscular respiratory failure. Serial FVC and Negative Inspiratory Force (NIF) are essential for early detection.",
-                "url": "https://pubmed.ncbi.nlm.nih.gov/3849202/"
-            },
-            {
-                "pmid": "3849203",
-                "title_en": "Thyroid Storm Presenting with Unexplained Atrial Fibrillation and Hyperthermia",
-                "history_en": "A 28-year-old female is brought in with acute agitation, confusion, tremor, temperature of 39.8°C, and rapid atrial fibrillation (HR 165 bpm).",
-                "question_en": "Which medication should be administered FIRST to inhibit peripheral conversion of T4 to T3?",
-                "options_en": ["A) Propylthiouracil (PTU) or Methimazole", "B) Hydrocortisone IV", "C) Propranolol IV", "D) Lugol's Iodine Solution"],
-                "correct_idx": 0,
-                "explanation_en": "Antithyroid drugs (PTU/Methimazole) must be given BEFORE iodine therapy to prevent worsening hormone synthesis.",
-                "url": "https://pubmed.ncbi.nlm.nih.gov/3849203/"
-            }
-        ]
     return cases
 
 def translate_text(text, target_lang='tr'):
@@ -107,10 +74,10 @@ def build_site():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedikalRadar | Klinik Vaka & Kılavuz İncelemeleri</title>
     <style>
-        /* Rosemary's Baby Klasik / Gotik Tıp Estetiği */
+        /* Rosemary's Baby - Açık Parşömen & Editoryal Tıp Kütüphanesi Teması */
         body {{
-            background-color: #121211;
-            color: #d1c9b8;
+            background-color: #f4f1ea;
+            color: #1a1a1a;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -118,16 +85,16 @@ def build_site():
         }}
 
         header {{
-            background-color: #1a1a18;
-            border-bottom: 2px solid #2e2c27;
-            padding: 25px 0;
+            background-color: #e8e2d5;
+            border-bottom: 2px solid #8b0000;
+            padding: 30px 0;
             text-align: center;
         }}
 
         .header-title {{
             font-family: Georgia, serif;
-            color: #7c0a02;
-            font-size: 2.2em;
+            color: #8b0000;
+            font-size: 2.4em;
             margin: 0;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -137,8 +104,8 @@ def build_site():
         .sub-title {{
             font-family: Georgia, serif;
             font-style: italic;
-            color: #8c8270;
-            font-size: 0.95em;
+            color: #555555;
+            font-size: 1em;
             margin-top: 5px;
         }}
 
@@ -151,18 +118,19 @@ def build_site():
         }}
 
         .lang-btn {{
-            background: #1a1a18;
-            border: 1px solid #7c0a02;
-            color: #d1c9b8;
+            background: #e8e2d5;
+            border: 1px solid #8b0000;
+            color: #8b0000;
             padding: 6px 15px;
             font-family: Georgia, serif;
             cursor: pointer;
             font-size: 0.9em;
+            font-weight: bold;
             transition: 0.3s;
         }}
 
         .lang-btn:hover {{
-            background: #7c0a02;
+            background: #8b0000;
             color: #fff;
         }}
 
@@ -173,28 +141,29 @@ def build_site():
         }}
 
         .case-card {{
-            background: #1a1a18;
-            border: 1px solid #2e2c27;
+            background: #ffffff;
+            border: 1px solid #dcd6cd;
             padding: 35px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }}
 
         .pmid-tag {{
             font-family: Georgia, serif;
-            color: #7c0a02;
+            color: #8b0000;
             font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 1px solid #2e2c27;
+            border-bottom: 1px solid #e8e2d5;
             padding-bottom: 5px;
             display: inline-block;
             margin-bottom: 15px;
+            font-weight: bold;
         }}
 
         h2.case-title {{
             font-family: Georgia, serif;
-            color: #e6dfd1;
+            color: #1a1a1a;
             font-size: 1.5em;
             font-weight: normal;
             margin: 0 0 20px 0;
@@ -203,17 +172,17 @@ def build_site():
 
         .case-history {{
             font-family: Arial, sans-serif;
-            color: #b8af9c;
+            color: #333333;
             font-size: 1em;
             margin-bottom: 25px;
-            background: #141413;
+            background: #f9f8f5;
             padding: 15px;
-            border-left: 3px solid #7c0a02;
+            border-left: 4px solid #8b0000;
         }}
 
         .question-box {{
             font-family: Georgia, serif;
-            color: #e6dfd1;
+            color: #1a1a1a;
             font-size: 1.05em;
             margin-bottom: 15px;
             font-weight: bold;
@@ -226,51 +195,54 @@ def build_site():
         }}
 
         .option-item {{
-            background: #22211e;
-            border: 1px solid #2e2c27;
+            background: #f4f1ea;
+            border: 1px solid #dcd6cd;
             padding: 12px 15px;
             margin-bottom: 8px;
             cursor: pointer;
             font-family: Arial, sans-serif;
             font-size: 0.95em;
             transition: 0.2s;
+            color: #222;
         }}
 
         .option-item:hover {{
-            background: #2a2925;
-            border-color: #7c0a02;
+            background: #e8e2d5;
+            border-color: #8b0000;
         }}
 
         .option-item.correct {{
-            background: #122818 !important;
+            background: #e8f5e9 !important;
             border-color: #2e7d32 !important;
-            color: #81c784 !important;
+            color: #1b5e20 !important;
+            font-weight: bold;
         }}
 
         .option-item.wrong {{
-            background: #2c1212 !important;
-            border-color: #7c0a02 !important;
-            color: #e57373 !important;
+            background: #ffebee !important;
+            border-color: #c62828 !important;
+            color: #b71c1c !important;
         }}
 
         .explanation-box {{
             display: none;
-            background: #141413;
-            border: 1px dashed #7c0a02;
+            background: #f9f8f5;
+            border: 1px dashed #8b0000;
             padding: 15px;
             margin-top: 15px;
             font-size: 0.9em;
-            color: #d1c9b8;
+            color: #222;
         }}
 
         .pubmed-link {{
             display: inline-block;
             margin-top: 15px;
-            color: #7c0a02;
+            color: #8b0000;
             text-decoration: none;
             font-family: Georgia, serif;
             font-size: 0.9em;
             font-style: italic;
+            font-weight: bold;
         }}
 
         .pubmed-link:hover {{
@@ -354,7 +326,7 @@ def build_site():
         const options = parentUl.querySelectorAll('.option-item');
         
         options.forEach(opt => {
-            opt.onclick = null; // Tekrar tıklamayı engelle
+            opt.onclick = null;
             opt.style.cursor = 'default';
         });
 
