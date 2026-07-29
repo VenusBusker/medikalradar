@@ -2,12 +2,13 @@ import os
 import json
 import random
 import requests
+import xml.etree.ElementTree as ET
 from deep_translator import GoogleTranslator
 
 os.makedirs("docs", exist_ok=True)
 
 PUBMED_SEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-PUBMED_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+PUBMED_FETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 HISTORY_FILE = "docs/history.json"
 
 def load_history():
@@ -24,16 +25,18 @@ def save_history(history_set):
         json.dump(list(history_set), f, ensure_ascii=False, indent=2)
 
 def translate_safe(text, target_lang='tr'):
-    if not text:
+    if not text or len(text.strip()) == 0:
         return ""
     try:
+        # Çeviri çok uzunsa böl
+        if len(text) > 1000:
+            text = text[:1000] + "..."
         return GoogleTranslator(source='auto', target=target_lang).translate(text)
     except Exception as e:
         print(f"Çeviri hatası: {e}")
         return text
 
 def shuffle_options(correct_opt, wrong_opts):
-    """Doğru cevabı her seferinde A, B, C, D arasında rastgele bir yere koyar."""
     all_opts = [correct_opt] + wrong_opts
     random.shuffle(all_opts)
     correct_idx = all_opts.index(correct_opt)
@@ -45,58 +48,86 @@ def shuffle_options(correct_opt, wrong_opts):
 def fetch_cases(history_set):
     cases = []
     try:
-        # Arama terimini ve sayısını (retmax: 40) genişlettik
+        # Arama: Sadece tam metni ve özeti açık erişim olan vaka raporları
         params = {
             "db": "pubmed",
-            "term": "(case report[Publication Type] OR clinical trial) AND free full text[sb]",
-            "retmax": "40",
+            "term": "case report[Publication Type] AND free full text[sb]",
+            "retmax": "30",
             "sort": "pub_date",
             "retmode": "json"
         }
         res = requests.get(PUBMED_SEARCH_URL, params=params, timeout=10)
         id_list = res.json().get("esearchresult", {}).get("idlist", [])
 
-        new_id_list = [pmid for pmid in id_list if pmid not in history_set][:15]
+        # Daha önce çekilmemiş yeni PMID'ler
+        new_id_list = [pmid for pmid in id_list if pmid not in history_set][:10]
 
         if new_id_list:
-            sum_params = {"db": "pubmed", "id": ",".join(new_id_list), "retmode": "json"}
-            sum_res = requests.get(PUBMED_SUMMARY_URL, params=sum_params, timeout=10)
-            result_data = sum_res.json().get("result", {})
+            # EFetch servisi ile makalelerin tam XML detayını çekiyoruz
+            fetch_params = {
+                "db": "pubmed",
+                "id": ",".join(new_id_list),
+                "retmode": "xml"
+            }
+            xml_res = requests.get(PUBMED_FETCH_URL, params=fetch_params, timeout=15)
+            root = ET.fromstring(xml_res.content)
 
-            for pmid in new_id_list:
-                if pmid in result_data:
-                    item = result_data[pmid]
-                    title_en = item.get("title", "Clinical Case Report")
-                    source = item.get("source", "Medical Journal")
-                    
-                    hist_en = f"A clinical case published in {source}. Patient presented with unique clinical symptoms requiring diagnostic workup."
-                    quest_en = "What is the most appropriate next clinical step?"
-                    
-                    # Şıkları dinamik karıştırma
-                    correct_en = "Order targeted clinical diagnostic imaging / evaluation"
-                    wrongs_en = ["Start empirical treatment immediately without testing", "Proceed to invasive surgical intervention", "Routine outpatient observation only"]
-                    
-                    opts_en, correct_idx = shuffle_options(correct_en, wrongs_en)
+            for article in root.findall(".//PubmedArticle"):
+                pmid_elem = article.find(".//PMID")
+                if pmid_elem is None:
+                    continue
+                pmid = pmid_elem.text
 
-                    cases.append({
-                        "pmid": pmid,
-                        "title_en": title_en,
-                        "title_tr": translate_safe(title_en, 'tr'),
-                        "history_en": hist_en,
-                        "history_tr": translate_safe(hist_en, 'tr'),
-                        "question_en": quest_en,
-                        "question_tr": translate_safe(quest_en, 'tr'),
-                        "options_en": opts_en,
-                        "options_tr": [translate_safe(o, 'tr') for o in opts_en],
-                        "correct_idx": correct_idx, # Artık değişken! (0, 1, 2 veya 3)
-                        "explanation_en": "Full diagnostic rationale and clinical management are available in the open-access publication.",
-                        "explanation_tr": "Detaylı tanısal gerekçe ve klinik tedavi yönetimi açık erişimli orijinal yayında mevcuttur.",
-                        "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
-                    })
-                    history_set.add(pmid)
+                # Başlık
+                title_elem = article.find(".//ArticleTitle")
+                title_en = title_elem.text if title_elem is not None and title_elem.text else "Clinical Case Presentation"
+
+                # Gerçek Klinik Anamnez (Abstract / Özet Metni)
+                abstract_nodes = article.findall(".//AbstractText")
+                abstract_parts = []
+                for node in abstract_nodes:
+                    if node.text:
+                        label = node.get("Label", "")
+                        prefix = f"<strong>{label}:</strong> " if label else ""
+                        abstract_parts.append(prefix + node.text)
+                
+                real_abstract_en = " ".join(abstract_parts) if abstract_parts else ""
+
+                # Eğer vakanın gerçek özet metni yoksa geç
+                if not real_abstract_en or len(real_abstract_en) < 80:
+                    continue
+
+                quest_en = "Based on the clinical presentation described above, what is the most appropriate next diagnostic or management step?"
+                correct_en = "Order targeted diagnostic laboratory & imaging evaluation"
+                wrongs_en = [
+                    "Empirical high-dose therapy without further testing",
+                    "Immediate surgical intervention without imaging",
+                    "Discharge with routine outpatient follow-up"
+                ]
+                
+                opts_en, correct_idx = shuffle_options(correct_en, wrongs_en)
+                explanation_en = f"Detailed diagnostic evaluation, lab findings, and therapeutic course for PMID {pmid} are documented in the open-access report."
+
+                cases.append({
+                    "pmid": pmid,
+                    "title_en": title_en,
+                    "title_tr": translate_safe(title_en, 'tr'),
+                    "history_en": real_abstract_en,
+                    "history_tr": translate_safe(real_abstract_en, 'tr'),
+                    "question_en": quest_en,
+                    "question_tr": translate_safe(quest_en, 'tr'),
+                    "options_en": opts_en,
+                    "options_tr": [translate_safe(o, 'tr') for o in opts_en],
+                    "correct_idx": correct_idx,
+                    "explanation_en": explanation_en,
+                    "explanation_tr": translate_safe(explanation_en, 'tr'),
+                    "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+                })
+                
+                history_set.add(pmid)
 
     except Exception as e:
-        print(f"API Hatası: {e}")
+        print(f"EFetch XML Hatası: {e}")
 
     return cases, history_set
 
@@ -105,7 +136,6 @@ def build_site():
     cases, updated_history = fetch_cases(history_set)
     save_history(updated_history)
 
-    # Şıklar ve Şablon Oluşturucu
     html_content = f"""<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -124,7 +154,7 @@ def build_site():
         .case-card {{ background: #ffffff; border: 1px solid #dcd6cd; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }}
         .pmid-tag {{ font-family: Georgia, serif; color: #8b0000; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #e8e2d5; padding-bottom: 5px; display: inline-block; margin-bottom: 15px; font-weight: bold; }}
         h2.case-title {{ font-family: Georgia, serif; color: #1a1a1a; font-size: 1.5em; font-weight: normal; margin: 0 0 20px 0; line-height: 1.4; }}
-        .case-history {{ font-family: Arial, sans-serif; color: #333333; font-size: 1em; margin-bottom: 25px; background: #f9f8f5; padding: 15px; border-left: 4px solid #8b0000; }}
+        .case-history {{ font-family: Arial, sans-serif; color: #333333; font-size: 0.98em; margin-bottom: 25px; background: #f9f8f5; padding: 18px; border-left: 4px solid #8b0000; line-height: 1.6; }}
         .question-box {{ font-family: Georgia, serif; color: #1a1a1a; font-size: 1.05em; margin-bottom: 15px; font-weight: bold; }}
         .options-list {{ list-style: none; padding: 0; margin: 0 0 20px 0; }}
         .option-item {{ background: #f4f1ea; border: 1px solid #dcd6cd; padding: 12px 15px; margin-bottom: 8px; cursor: pointer; font-family: Arial, sans-serif; font-size: 0.95em; transition: 0.2s; color: #222; }}
@@ -132,7 +162,7 @@ def build_site():
         .option-item.correct {{ background: #e8f5e9 !important; border-color: #2e7d32 !important; color: #1b5e20 !important; font-weight: bold; }}
         .option-item.wrong {{ background: #ffebee !important; border-color: #c62828 !important; color: #b71c1c !important; }}
         .explanation-box {{ display: none; background: #f9f8f5; border: 1px dashed #8b0000; padding: 15px; margin-top: 15px; font-size: 0.9em; color: #222; }}
-        .pubmed-link {{ display: inline-block; margin-top: 15px; color: #8b0000; text-decoration: none; font-family: Georgia, serif; font-size: 0.9em; font-style: italic; font-weight: bold; }}
+        .pubmed-link {{ display: inline-block; margin-top: 12px; color: #8b0000; text-decoration: none; font-family: Georgia, serif; font-size: 0.9em; font-style: italic; font-weight: bold; }}
         .pubmed-link:hover {{ text-decoration: underline; }}
     </style>
 </head>
@@ -179,7 +209,7 @@ def build_site():
         </ul>
 
         <div id="exp-{c['pmid']}" class="explanation-box">
-            <div class="lang-tr"><strong>Klinik Açıklama:</strong> {c['explanation_tr']}</div>
+            <div class="lang-tr"><strong>Klinik İnceleme:</strong> {c['explanation_tr']}</div>
             <div class="lang-en" style="display:none;"><strong>Clinical Rationale:</strong> {c['explanation_en']}</div>
             <a href="{c['url']}" target="_blank" class="pubmed-link">Orijinal Makaleyi Oku (PubMed) ↗</a>
         </div>
