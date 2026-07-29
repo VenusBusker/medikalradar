@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import requests
 from deep_translator import GoogleTranslator
 
@@ -10,7 +11,6 @@ PUBMED_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcg
 HISTORY_FILE = "docs/history.json"
 
 def load_history():
-    """Daha önce eklenmiş vaka PMID'lerini yükler."""
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, "r", encoding="utf-8") as f:
@@ -20,58 +20,8 @@ def load_history():
     return set()
 
 def save_history(history_set):
-    """Güncellenmiş PMID listesini kaydeder."""
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(list(history_set), f, ensure_ascii=False, indent=2)
-
-def get_fallback_cases():
-    return [
-        {
-            "pmid": "3849201",
-            "title_en": "Acute Inferior Myocardial Infarction Presenting as Isolated Epigastric Pain",
-            "title_tr": "İzole Epigastrik Ağrı ile Başvuran Akut İnferior Miyokard İnfarktüsü",
-            "history_en": "A 32-year-old male presented to the emergency room with severe epigastric burning pain and mild diaphoresis lasting for 2 hours, initially misdiagnosed as acute gastritis.",
-            "history_tr": "32 yaşında erkek hasta, 2 saattir devam eden şiddetli epigastrik yanma ağrısı ve hafif soğuk terleme şikayetiyle acil servise başvurdu; başlangıçta akut gastrit ön tanısı aldı.",
-            "question_en": "What is the most critical initial diagnostic step for this patient?",
-            "question_tr": "Bu hasta için en kritik ilk tanısal adım nedir?",
-            "options_en": ["A) 12-Lead Electrocardiogram (ECG)", "B) Emergency Upper Endoscopy", "C) Oral Antacid Administration", "D) Abdominal Ultrasound"],
-            "options_tr": ["A) 12 Derivasyonlu Elektrokardiyogram (EKG)", "B) Acil Üst Endoskopi", "C) Oral Antasit Uygulaması", "D) Abdominal Ultrason"],
-            "correct_idx": 0,
-            "explanation_en": "Atypical presentations of inferior wall MI often mimic gastrointestinal symptoms. A 12-lead ECG within 10 minutes of arrival is mandatory.",
-            "explanation_tr": "İnferior duvar MI'ın atipik başvuruları sıklıkla gastrointestinal semptomları taklit eder. Başvurudan sonraki 10 dakika içinde 12 derivasyonlu EKG çekilmesi zorunludur.",
-            "url": "https://pubmed.ncbi.nlm.nih.gov/3849201/"
-        },
-        {
-            "pmid": "3849202",
-            "title_en": "Guillain-Barré Syndrome Following Acute Viral Upper Respiratory Infection",
-            "title_tr": "Akut Viral Üst Solunum Yolu Enfeksiyonunu Takip Eden Guillain-Barré Sendromu",
-            "history_en": "A 45-year-old female presents with progressive symmetrical lower extremity weakness and paresthesia developing over 48 hours, 2 weeks after an upper respiratory infection.",
-            "history_tr": "45 yaşında kadın hasta, üst solunum yolu enfeksiyonundan 2 hafta sonra 48 saat içinde gelişen artan simetrik alt ekstremite güçsüzlüğü ve parestezi ile başvurdu.",
-            "question_en": "Which bedside clinical test is most essential to monitor for impending respiratory failure?",
-            "question_tr": "Gelişmekte olan solunum yetmezliğini izlemek için hasta başında en gerekli klinik test hangisidir?",
-            "options_en": ["A) Forced Vital Capacity (FVC) & NIF", "B) Serial Arterial Blood Gas", "C) Repeat Lumbar Puncture", "D) Continuous Pulse Oximetry Only"],
-            "options_tr": ["A) Zorlu Vital Kapasite (FVC) ve NIF", "B) Seri Arteriyel Kan Gazı", "C) Tıbbi Lumbal Ponksiyon", "D) Sadece Sürekli Nabız Oksimetresi"],
-            "correct_idx": 0,
-            "explanation_en": "Pulse oximetry drops late in neuromuscular respiratory failure. Serial FVC and Negative Inspiratory Force (NIF) are essential for early detection.",
-            "explanation_tr": "Nöromüsküler solunum yetmezliğinde nabız oksimetresi geç düşer. Erken tespit için seri FVC ve Negatif İnspiratuar Kuvvet (NIF) ölçümü şarttır.",
-            "url": "https://pubmed.ncbi.nlm.nih.gov/3849202/"
-        },
-        {
-            "pmid": "3849203",
-            "title_en": "Thyroid Storm Presenting with Unexplained Atrial Fibrillation and Hyperthermia",
-            "title_tr": "Açıklanamayan Atriyal Fibrilasyon ve Yüksek Ateş ile Başvuran Tiroit Fırtınası",
-            "history_en": "A 28-year-old female is brought in with acute agitation, confusion, tremor, temperature of 39.8°C, and rapid atrial fibrillation (HR 165 bpm).",
-            "history_tr": "28 yaşında kadın hasta; akut ajitasyon, konfüzyon, tremor, 39.8°C ateş ve hızlı atriyal fibrilasyon (Nabız 165/dk) ile getirildi.",
-            "question_en": "Which medication should be administered FIRST to inhibit peripheral conversion of T4 to T3?",
-            "question_tr": "T4'ün T3'e periferik dönüşümünü engellemek için İLK olarak hangi ilaç verilmelidir?",
-            "options_en": ["A) Propylthiouracil (PTU) or Methimazole", "B) Hydrocortisone IV", "C) Propranolol IV", "D) Lugol's Iodine Solution"],
-            "options_tr": ["A) Propiltiourasil (PTU) veya Metimazol", "B) Hidrokortizon IV", "C) Propranolol IV", "D) Lugol İyot Solüsyonu"],
-            "correct_idx": 0,
-            "explanation_en": "Antithyroid drugs (PTU/Methimazole) must be given BEFORE iodine therapy to prevent worsening hormone synthesis.",
-            "explanation_tr": "Hormon sentezinin kötüleşmesini önlemek için antitiroit ilaçlar iyot tedavisinden ÖNCE verilmelidir.",
-            "url": "https://pubmed.ncbi.nlm.nih.gov/3849203/"
-        }
-    ]
 
 def translate_safe(text, target_lang='tr'):
     if not text:
@@ -79,40 +29,54 @@ def translate_safe(text, target_lang='tr'):
     try:
         return GoogleTranslator(source='auto', target=target_lang).translate(text)
     except Exception as e:
-        print(f"Çeviri atlandı: {e}")
+        print(f"Çeviri hatası: {e}")
         return text
+
+def shuffle_options(correct_opt, wrong_opts):
+    """Doğru cevabı her seferinde A, B, C, D arasında rastgele bir yere koyar."""
+    all_opts = [correct_opt] + wrong_opts
+    random.shuffle(all_opts)
+    correct_idx = all_opts.index(correct_opt)
+    
+    letters = ["A) ", "B) ", "C) ", "D) "]
+    formatted_opts = [letters[i] + opt for i, opt in enumerate(all_opts)]
+    return formatted_opts, correct_idx
 
 def fetch_cases(history_set):
     cases = []
     try:
+        # Arama terimini ve sayısını (retmax: 40) genişlettik
         params = {
             "db": "pubmed",
-            "term": "case report[Publication Type] AND free full text[sb]",
-            "retmax": "15",
+            "term": "(case report[Publication Type] OR clinical trial) AND free full text[sb]",
+            "retmax": "40",
             "sort": "pub_date",
             "retmode": "json"
         }
-        res = requests.get(PUBMED_SEARCH_URL, params=params, timeout=8)
+        res = requests.get(PUBMED_SEARCH_URL, params=params, timeout=10)
         id_list = res.json().get("esearchresult", {}).get("idlist", [])
 
-        # Daha önce çekilmemiş yepyeni PMID'leri filtrele
-        new_id_list = [pmid for pmid in id_list if pmid not in history_set]
+        new_id_list = [pmid for pmid in id_list if pmid not in history_set][:15]
 
         if new_id_list:
             sum_params = {"db": "pubmed", "id": ",".join(new_id_list), "retmode": "json"}
-            sum_res = requests.get(PUBMED_SUMMARY_URL, params=sum_params, timeout=8)
+            sum_res = requests.get(PUBMED_SUMMARY_URL, params=sum_params, timeout=10)
             result_data = sum_res.json().get("result", {})
 
             for pmid in new_id_list:
                 if pmid in result_data:
                     item = result_data[pmid]
                     title_en = item.get("title", "Clinical Case Report")
-                    source = item.get("source", "Journal")
+                    source = item.get("source", "Medical Journal")
                     
-                    hist_en = f"A complex clinical case published in {source}. Patient presented with acute symptoms requiring immediate differential diagnosis."
+                    hist_en = f"A clinical case published in {source}. Patient presented with unique clinical symptoms requiring diagnostic workup."
                     quest_en = "What is the most appropriate next clinical step?"
-                    opts_en = ["A) Order emergency diagnostic imaging", "B) Start immediate empirical treatment", "C) Perform invasive procedure", "D) Routine observation"]
-                    exp_en = "Full clinical diagnostic rationale and treatment outcomes are detailed in the PubMed publication."
+                    
+                    # Şıkları dinamik karıştırma
+                    correct_en = "Order targeted clinical diagnostic imaging / evaluation"
+                    wrongs_en = ["Start empirical treatment immediately without testing", "Proceed to invasive surgical intervention", "Routine outpatient observation only"]
+                    
+                    opts_en, correct_idx = shuffle_options(correct_en, wrongs_en)
 
                     cases.append({
                         "pmid": pmid,
@@ -124,21 +88,15 @@ def fetch_cases(history_set):
                         "question_tr": translate_safe(quest_en, 'tr'),
                         "options_en": opts_en,
                         "options_tr": [translate_safe(o, 'tr') for o in opts_en],
-                        "correct_idx": 0,
-                        "explanation_en": exp_en,
-                        "explanation_tr": translate_safe(exp_en, 'tr'),
+                        "correct_idx": correct_idx, # Artık değişken! (0, 1, 2 veya 3)
+                        "explanation_en": "Full diagnostic rationale and clinical management are available in the open-access publication.",
+                        "explanation_tr": "Detaylı tanısal gerekçe ve klinik tedavi yönetimi açık erişimli orijinal yayında mevcuttur.",
                         "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
                     })
-                    
-                    # Yeni PMID'yi hafızaya ekle
                     history_set.add(pmid)
 
     except Exception as e:
         print(f"API Hatası: {e}")
-
-    # Eğer API'den yeni veri gelmezse yedek listeyi kullan
-    if not cases:
-        cases = get_fallback_cases()
 
     return cases, history_set
 
@@ -147,6 +105,7 @@ def build_site():
     cases, updated_history = fetch_cases(history_set)
     save_history(updated_history)
 
+    # Şıklar ve Şablon Oluşturucu
     html_content = f"""<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -154,179 +113,27 @@ def build_site():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedikalRadar | Klinik Olgu Simülasyonları</title>
     <style>
-        body {{
-            background-color: #f4f1ea;
-            color: #1a1a1a;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.7;
-        }}
-
-        header {{
-            background-color: #e8e2d5;
-            border-bottom: 2px solid #8b0000;
-            padding: 30px 0;
-            text-align: center;
-        }}
-
-        .header-title {{
-            font-family: Georgia, serif;
-            color: #8b0000;
-            font-size: 2.4em;
-            margin: 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: normal;
-        }}
-
-        .sub-title {{
-            font-family: Georgia, serif;
-            font-style: italic;
-            color: #555555;
-            font-size: 1em;
-            margin-top: 5px;
-        }}
-
-        .top-bar {{
-            max-width: 800px;
-            margin: 20px auto 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: flex-end;
-        }}
-
-        .lang-btn {{
-            background: #e8e2d5;
-            border: 1px solid #8b0000;
-            color: #8b0000;
-            padding: 6px 15px;
-            font-family: Georgia, serif;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
-            transition: 0.3s;
-        }}
-
-        .lang-btn:hover {{
-            background: #8b0000;
-            color: #fff;
-        }}
-
-        .container {{
-            max-width: 800px;
-            margin: 20px auto 60px auto;
-            padding: 0 20px;
-        }}
-
-        .case-card {{
-            background: #ffffff;
-            border: 1px solid #dcd6cd;
-            padding: 35px;
-            margin-bottom: 35px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }}
-
-        .pmid-tag {{
-            font-family: Georgia, serif;
-            color: #8b0000;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #e8e2d5;
-            padding-bottom: 5px;
-            display: inline-block;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }}
-
-        h2.case-title {{
-            font-family: Georgia, serif;
-            color: #1a1a1a;
-            font-size: 1.5em;
-            font-weight: normal;
-            margin: 0 0 20px 0;
-            line-height: 1.4;
-        }}
-
-        .case-history {{
-            font-family: Arial, sans-serif;
-            color: #333333;
-            font-size: 1em;
-            margin-bottom: 25px;
-            background: #f9f8f5;
-            padding: 15px;
-            border-left: 4px solid #8b0000;
-        }}
-
-        .question-box {{
-            font-family: Georgia, serif;
-            color: #1a1a1a;
-            font-size: 1.05em;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }}
-
-        .options-list {{
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }}
-
-        .option-item {{
-            background: #f4f1ea;
-            border: 1px solid #dcd6cd;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            font-size: 0.95em;
-            transition: 0.2s;
-            color: #222;
-        }}
-
-        .option-item:hover {{
-            background: #e8e2d5;
-            border-color: #8b0000;
-        }}
-
-        .option-item.correct {{
-            background: #e8f5e9 !important;
-            border-color: #2e7d32 !important;
-            color: #1b5e20 !important;
-            font-weight: bold;
-        }}
-
-        .option-item.wrong {{
-            background: #ffebee !important;
-            border-color: #c62828 !important;
-            color: #b71c1c !important;
-        }}
-
-        .explanation-box {{
-            display: none;
-            background: #f9f8f5;
-            border: 1px dashed #8b0000;
-            padding: 15px;
-            margin-top: 15px;
-            font-size: 0.9em;
-            color: #222;
-        }}
-
-        .pubmed-link {{
-            display: inline-block;
-            margin-top: 15px;
-            color: #8b0000;
-            text-decoration: none;
-            font-family: Georgia, serif;
-            font-size: 0.9em;
-            font-style: italic;
-            font-weight: bold;
-        }}
-
-        .pubmed-link:hover {{
-            text-decoration: underline;
-        }}
+        body {{ background-color: #f4f1ea; color: #1a1a1a; font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.7; }}
+        header {{ background-color: #e8e2d5; border-bottom: 2px solid #8b0000; padding: 30px 0; text-align: center; }}
+        .header-title {{ font-family: Georgia, serif; color: #8b0000; font-size: 2.4em; margin: 0; letter-spacing: 2px; text-transform: uppercase; font-weight: normal; }}
+        .sub-title {{ font-family: Georgia, serif; font-style: italic; color: #555555; font-size: 1em; margin-top: 5px; }}
+        .top-bar {{ max-width: 800px; margin: 20px auto 0 auto; padding: 0 20px; display: flex; justify-content: flex-end; }}
+        .lang-btn {{ background: #e8e2d5; border: 1px solid #8b0000; color: #8b0000; padding: 6px 15px; font-family: Georgia, serif; cursor: pointer; font-size: 0.9em; font-weight: bold; transition: 0.3s; }}
+        .lang-btn:hover {{ background: #8b0000; color: #fff; }}
+        .container {{ max-width: 800px; margin: 20px auto 60px auto; padding: 0 20px; }}
+        .case-card {{ background: #ffffff; border: 1px solid #dcd6cd; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }}
+        .pmid-tag {{ font-family: Georgia, serif; color: #8b0000; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #e8e2d5; padding-bottom: 5px; display: inline-block; margin-bottom: 15px; font-weight: bold; }}
+        h2.case-title {{ font-family: Georgia, serif; color: #1a1a1a; font-size: 1.5em; font-weight: normal; margin: 0 0 20px 0; line-height: 1.4; }}
+        .case-history {{ font-family: Arial, sans-serif; color: #333333; font-size: 1em; margin-bottom: 25px; background: #f9f8f5; padding: 15px; border-left: 4px solid #8b0000; }}
+        .question-box {{ font-family: Georgia, serif; color: #1a1a1a; font-size: 1.05em; margin-bottom: 15px; font-weight: bold; }}
+        .options-list {{ list-style: none; padding: 0; margin: 0 0 20px 0; }}
+        .option-item {{ background: #f4f1ea; border: 1px solid #dcd6cd; padding: 12px 15px; margin-bottom: 8px; cursor: pointer; font-family: Arial, sans-serif; font-size: 0.95em; transition: 0.2s; color: #222; }}
+        .option-item:hover {{ background: #e8e2d5; border-color: #8b0000; }}
+        .option-item.correct {{ background: #e8f5e9 !important; border-color: #2e7d32 !important; color: #1b5e20 !important; font-weight: bold; }}
+        .option-item.wrong {{ background: #ffebee !important; border-color: #c62828 !important; color: #b71c1c !important; }}
+        .explanation-box {{ display: none; background: #f9f8f5; border: 1px dashed #8b0000; padding: 15px; margin-top: 15px; font-size: 0.9em; color: #222; }}
+        .pubmed-link {{ display: inline-block; margin-top: 15px; color: #8b0000; text-decoration: none; font-family: Georgia, serif; font-size: 0.9em; font-style: italic; font-weight: bold; }}
+        .pubmed-link:hover {{ text-decoration: underline; }}
     </style>
 </head>
 <body>
