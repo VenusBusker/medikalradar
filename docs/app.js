@@ -1,30 +1,7 @@
 let globalCases = [];
 let filteredCases = [];
 let visibleCount = 10;
-
-// Dev Tıbbi Sözlük (Kelimenin büyüklüğü/küçüklüğü fark etmez)
-const MEDICAL_DICTIONARY = {
-    "ECG": "Electrocardiogram — Measures electrical activity of the heart.",
-    "EKG": "Electrocardiogram — Measures electrical activity of the heart.",
-    "Troponin": "Cardiac biomarker elevated during myocardial injury or infarction.",
-    "MRI": "Magnetic Resonance Imaging — High resolution non-radiation soft tissue scan.",
-    "CT": "Computed Tomography scan — Cross-sectional X-ray imaging.",
-    "STEMI": "ST-Elevation Myocardial Infarction — Acute severe heart attack requiring urgent reperfusion.",
-    "Areflexia": "Absence of neurological deep tendon reflexes.",
-    "Tachycardia": "Abnormally rapid heart rate (usually over 100 bpm in adults).",
-    "Bradycardia": "Abnormally slow heart rate (usually below 60 bpm).",
-    "Dyspnea": "Shortness of breath or difficult/labored breathing.",
-    "Laparoscopy": "Minimally invasive surgical procedure inside the abdomen.",
-    "Hypokalemia": "Abnormally low potassium concentration in the blood.",
-    "Hyperkalemia": "Abnormally high potassium level in the blood.",
-    "Anaphylaxis": "Severe, potentially life-threatening systemic allergic reaction.",
-    "Pneumothorax": "Abnormal collection of air in the pleural space that causes lung collapse.",
-    "Ascites": "Abnormal accumulation of fluid within the peritoneal cavity.",
-    "Biopsy": "Removal of tissue sample for diagnostic microscopic examination.",
-    "Patient": "Individual receiving medical care or treatment.",
-    "History": "Patient's past medical events and clinical background.",
-    "Diagnosis": "Identification of the nature of an illness by examination."
-};
+let savedPmids = JSON.parse(localStorage.getItem('cr_saved_cases') || '[]');
 
 async function loadCases() {
     const appContainer = document.getElementById('app');
@@ -43,6 +20,7 @@ async function loadCases() {
             return;
         }
 
+        updateSavedCount();
         renderCases();
         renderSidebarArticles();
     } catch (e) {
@@ -56,19 +34,29 @@ async function loadCases() {
     }
 }
 
-// Terimleri Büyük/Küçük Harf Duyarsız Yakalayan Akıllı Fonksiyon
-function highlightMedicalTerms(text) {
-    if (!text) return "";
+// Favori Sayısını Günceller
+function updateSavedCount() {
+    const countSpan = document.getElementById('saved-count');
+    if (countSpan) countSpan.innerText = savedPmids.length;
+}
 
-    let processedText = text;
-    for (let key in MEDICAL_DICTIONARY) {
-        // 'gi' bayrağı ile hem büyük hem küçük harfleri yakalıyoruz
-        const regex = new RegExp(`\\b(${key})\\b`, 'gi');
-        processedText = processedText.replace(regex, (match) => {
-            return `<span class="spot-term" data-tooltip="${MEDICAL_DICTIONARY[key]}">${match}</span>`;
-        });
+// Favori Ekle / Çıkar
+function toggleBookmark(pmid) {
+    if (savedPmids.includes(pmid)) {
+        savedPmids = savedPmids.filter(id => id !== pmid);
+    } else {
+        savedPmids.push(pmid);
     }
-    return processedText;
+    localStorage.setItem('cr_saved_cases', JSON.stringify(savedPmids));
+    updateSavedCount();
+    renderCases();
+}
+
+// High-Yield Pearl Çıkarıcı (Metindeki en vurucu ilk cümleyi öne çıkarır)
+function generateClinicalPearl(outcomeText) {
+    if (!outcomeText) return "Key clinical diagnosis and management strategy outlined in full paper.";
+    const sentences = outcomeText.split('. ');
+    return sentences[0] + (sentences[0].endsWith('.') ? '' : '.');
 }
 
 function renderCases() {
@@ -89,11 +77,14 @@ function renderCases() {
         const category = c.category || 'General Medicine';
         const triage = c.triage || 'Yellow';
         const triageBadgeClass = triage === 'Red' ? 'badge-red' : (triage === 'Green' ? 'badge-green' : 'badge-yellow');
-        
-        const highlightedHistory = highlightMedicalTerms(c.history_en || c.history_tr);
-        const highlightedOutcome = highlightMedicalTerms(c.explanation_en || c.explanation_tr);
+        const isSaved = savedPmids.includes(c.pmid);
+
+        const pearlText = generateClinicalPearl(c.explanation_en || c.explanation_tr);
 
         card.innerHTML = `
+            <button class="bookmark-btn ${isSaved ? 'active' : ''}" onclick="toggleBookmark('${c.pmid}')" title="Save to Personal Journal">
+                ${isSaved ? '🔖' : '🏷️'}
+            </button>
             <div class="card-header">
                 <span class="badge badge-cat">📌 ${category}</span>
                 <span class="badge ${triageBadgeClass}">${triage} Acuity</span>
@@ -102,15 +93,22 @@ function renderCases() {
             
             <div class="patient-history">
                 <strong>🩺 Clinical Presentation & History:</strong><br>
-                ${highlightedHistory}
+                ${c.history_en || c.history_tr}
             </div>
             
             <div class="diagnosis-box">
-                <div class="diag-title">💡 Diagnostic Outcome & Key Takeaways:</div>
-                <p>${highlightedOutcome}</p>
-                <div style="margin-top:12px; text-align:right;">
-                    <a href="${c.url}" target="_blank" style="color:#1a73e8; font-weight:bold; font-size:0.88em; text-decoration:none;">Read Full PubMed Case Report ↗</a>
-                </div>
+                <div class="diag-title">💡 Diagnostic Outcome & Management:</div>
+                <p>${c.explanation_en || c.explanation_tr}</p>
+            </div>
+
+            <!-- 🔥 HIGH-YIELD CLINICAL PEARL KUTUSU -->
+            <div class="pearl-box">
+                <div class="pearl-title">⚡ High-Yield Clinical Pearl</div>
+                <div>${pearlText}</div>
+            </div>
+
+            <div style="margin-top:12px; text-align:right;">
+                <a href="${c.url}" target="_blank" style="color:#1a73e8; font-weight:bold; font-size:0.85em; text-decoration:none;">Read Full PubMed Paper ↗</a>
             </div>
         `;
         container.appendChild(card);
@@ -161,6 +159,8 @@ function filterCases(filterType) {
 
     if (filterType === 'ALL') {
         filteredCases = [...globalCases];
+    } else if (filterType === 'BOOKMARKS') {
+        filteredCases = globalCases.filter(c => savedPmids.includes(c.pmid));
     } else if (filterType === 'Red') {
         filteredCases = globalCases.filter(c => c.triage === 'Red');
     } else {
