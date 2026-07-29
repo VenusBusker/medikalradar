@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import re
 import requests
 import xml.etree.ElementTree as ET
 from deep_translator import GoogleTranslator
@@ -30,13 +31,42 @@ def shuffle_options(correct_opt, wrong_opts):
     formatted_opts = [letters[i] + opt for i, opt in enumerate(all_opts)]
     return formatted_opts, correct_idx
 
+def trim_at_spoiler(text_en):
+    """Metni tanı, tedavi ve ameliyat spoiler'ı vermeden tam zamanında keser."""
+    # Spoiler tetikleyici İngilizce kelimeler
+    spoiler_keywords = [
+        " diagnosis of ", " diagnosed with ", " was diagnosed ", " reveal ", 
+        " patient underwent ", " treated with ", " surgical ", " laparoscopy ",
+        " cystectomy ", " management included ", " outcome ", " postoperatively "
+    ]
+    
+    sentences = re.split(r'(?<=[.!?])\s+', text_en)
+    clinical_history = []
+    clinical_outcome = []
+    
+    spoiler_found = False
+    for sentence in sentences:
+        sentence_lower = sentence.lower()
+        if any(kw in sentence_lower for kw in spoiler_keywords) and len(clinical_history) >= 2:
+            spoiler_found = True
+        
+        if not spoiler_found:
+            clinical_history.append(sentence)
+        else:
+            clinical_outcome.append(sentence)
+            
+    history_text = " ".join(clinical_history)
+    outcome_text = " ".join(clinical_outcome) if clinical_outcome else "Full treatment and diagnostic outcome details are in the original paper."
+    
+    return history_text, outcome_text
+
 def get_rich_curated_cases():
-    """Genişletilmiş yüksek kaliteli klinik vaka kütüphanesi."""
+    """Her zaman tıbbi olarak kusursuz, spoiler içermeyen vaka havuzu."""
     raw_cases = [
         {
             "pmid": "3849201",
-            "title_en": "Acute Inferior Myocardial Infarction Presenting as Isolated Epigastric Burning Pain",
-            "history_en": "A 32-year-old male presented to the ER with severe epigastric burning pain and diaphoresis lasting 2 hours. Initial physical exam showed HR 58 bpm and BP 100/65 mmHg. Abdominal exam was completely soft and non-tender.",
+            "title_en": "Acute Epigastric Pain and Diaphoresis in a 32-Year-Old Male",
+            "history_en": "A 32-year-old male with no prior medical history presented to the ER with severe epigastric burning pain and diaphoresis lasting 2 hours. Initial physical exam showed HR 58 bpm and BP 100/65 mmHg. Abdominal exam was completely soft and non-tender.",
             "question_en": "What is the most critical immediate diagnostic test required for this patient?",
             "correct_en": "12-Lead Electrocardiogram (ECG) to evaluate for inferior wall STEMI",
             "wrongs_en": [
@@ -48,8 +78,8 @@ def get_rich_curated_cases():
         },
         {
             "pmid": "3849202",
-            "title_en": "Subacute Progressive Muscle Weakness: Classic Presentation of Guillain-Barré Syndrome",
-            "history_en": "A 45-year-old female evaluated for ascending symmetrical lower extremity weakness and absent deep tendon reflexes (areflexia) developing over 72 hours, following a Campylobacter jejuni infection 2 weeks prior.",
+            "title_en": "Progressive Ascending Lower Extremity Weakness Following Viral Infection",
+            "history_en": "A 45-year-old female evaluated for ascending symmetrical lower extremity weakness and absent deep tendon reflexes (areflexia) developing over 72 hours, following a gastroenteritis episode 2 weeks prior.",
             "question_en": "Which clinical parameter is most vital to monitor continuously at bedside?",
             "correct_en": "Forced Vital Capacity (FVC) and Negative Inspiratory Force (NIF)",
             "wrongs_en": [
@@ -57,11 +87,11 @@ def get_rich_curated_cases():
                 "Continuous Pulse Oximetry Alone",
                 "Repeat Lumbar Puncture CSF Protein Tracking"
             ],
-            "explanation_en": "Pulse oximetry drops late in neuromuscular respiratory failure. Serial bedside FVC and NIF measurements are essential to decide early intubation."
+            "explanation_en": "Pulse oximetry drops late in neuromuscular respiratory failure. Serial bedside FVC and NIF measurements are essential to decide early intubation in Guillain-Barré Syndrome."
         },
         {
             "pmid": "3849203",
-            "title_en": "Thyroid Storm Unmasked by New-Onset Atrial Fibrillation and Hyperthermia",
+            "title_en": "Agitation, Severe Tachycardia, and Hyperthermia in a Young Female",
             "history_en": "A 28-year-old female presents with severe agitation, profuse sweating, a temperature of 39.9°C, and irregular tachycardia (HR 170 bpm). TSH is undetectable and free T4 is markedly elevated.",
             "question_en": "Which initial therapeutic agent should be given FIRST before iodine administration?",
             "correct_en": "Propylthiouracil (PTU) or Methimazole",
@@ -70,59 +100,7 @@ def get_rich_curated_cases():
                 "IV Furosemide",
                 "Immediate Transesophageal Cardioversion"
             ],
-            "explanation_en": "Thionamides (PTU/Methimazole) must precede iodine therapy by at least 1 hour to prevent iodine from serving as a substrate for new thyroid hormone synthesis."
-        },
-        {
-            "pmid": "3849204",
-            "title_en": "Acute Tension Pneumothorax Presenting in a Tall Thin Young Adult During Strenuous Exercise",
-            "history_en": "A 19-year-old male presents with sudden-onset severe right-sided pleuritic chest pain, dyspnea, hypotension (BP 85/50 mmHg), trachea shifted to the left, and absent breath sounds on the right.",
-            "question_en": "What is the immediate life-saving intervention indicated before obtaining a chest X-ray?",
-            "correct_en": "Immediate needle decompression in the 2nd intercostal space at midclavicular line",
-            "wrongs_en": [
-                "Urgent Non-contrast Chest CT Scan",
-                "Endotracheal Intubation and Positive Pressure Ventilation",
-                "High-dose Intravenous Bronchodilator Infusion"
-            ],
-            "explanation_en": "Tension pneumothorax is a clinical diagnosis requiring immediate needle decompression without waiting for radiographic confirmation."
-        },
-        {
-            "pmid": "3849205",
-            "title_en": "Atypical Acute Appendicitis in an Elderly Patient Presenting as Mild Confusion and Anorexia",
-            "history_en": "A 78-year-old diabetic female is brought by family for acute onset lethargy and mild abdominal discomfort. Fever is absent (36.8°C), and abdominal exam reveals subtle right lower quadrant tenderness without guarding.",
-            "question_en": "Which imaging modality is most definitive for confirming the diagnosis in this patient?",
-            "correct_en": "Abdominal CT Scan with IV Contrast",
-            "wrongs_en": [
-                "Plain Abdominal X-Ray",
-                "Re-evaluation after 24 hours of IV fluids",
-                "Barium Enema Study"
-            ],
-            "explanation_en": "Elderly patients often lack classic peritoneal signs or fever. Abdominal CT is highly sensitive and specific for diagnosing acute appendicitis in atypical presentations."
-        },
-        {
-            "pmid": "3849206",
-            "title_en": "Acute Bacterial Meningitis in a College Student Presenting with Fever and Petechial Rash",
-            "history_en": "A 20-year-old male university student is admitted with severe headache, neck stiffness (positive Kernig and Brudzinski signs), high fever (39.5°C), and rapidly spreading petechial skin lesions.",
-            "question_en": "After obtaining blood cultures, what is the most urgent management priority?",
-            "correct_en": "Immediate IV administration of Ceftriaxone, Vancomycin, and Dexamethasone",
-            "wrongs_en": [
-                "Wait for Lumbar Puncture results before starting antibiotics",
-                "Perform Urgent Brain MRI with Contrast",
-                "Administer IV Antihistamines and Steroids for Suspected Allergic Reaction"
-            ],
-            "explanation_en": "In suspected meningococcal meningitis, empirical IV antibiotic and corticosteroid therapy must not be delayed for lumbar puncture or imaging."
-        },
-        {
-            "pmid": "3849207",
-            "title_en": "Diabetic Ketoacidosis (DKA) Unmasked by Acute Abdominal Pain and Kussmaul Breathing",
-            "history_en": "A 16-year-old female presents with deep rapid respiration (Kussmaul breathing), diffuse abdominal pain, nausea, vomiting, glucose 450 mg/dL, pH 7.12, and heavy urinary ketones.",
-            "question_en": "What is the initial fluids of choice for initial resuscitation in this patient?",
-            "correct_en": "0.9% Normal Saline (0.9% NaCl) IV Bolus",
-            "wrongs_en": [
-                "5% Dextrose in Water (D5W)",
-                "Immediate High-Dose IV Sodium Bicarbonate",
-                "Subcutaneous Long-Acting Insulin"
-            ],
-            "explanation_en": "Fluid resuscitation with 0.9% Normal Saline is the primary initial step in DKA management to restore intravascular volume before aggressive insulin therapy."
+            "explanation_en": "Thionamides (PTU/Methimazole) must precede iodine therapy by at least 1 hour to prevent iodine from serving as a substrate for new thyroid hormone synthesis in Thyroid Storm."
         }
     ]
 
@@ -149,7 +127,6 @@ def get_rich_curated_cases():
 def fetch_cases():
     cases = []
     try:
-        # Çoklu kaynak araması (PMC ve PubMed)
         params = {
             "db": "pubmed",
             "term": "(case report[Publication Type] OR clinical case study) AND free full text[sb]",
@@ -171,17 +148,20 @@ def fetch_cases():
                 pmid = pmid_elem.text
 
                 title_elem = article.find(".//ArticleTitle")
-                title_en = title_elem.text if title_elem is not None and title_elem.text else "Clinical Case Report"
+                title_en = title_elem.text if title_elem is not None and title_elem.text else "Clinical Case Presentation"
 
                 abstract_nodes = article.findall(".//AbstractText")
                 abstract_parts = [node.text for node in abstract_nodes if node.text]
-                real_abstract_en = " ".join(abstract_parts) if abstract_parts else ""
+                full_abstract_en = " ".join(abstract_parts) if abstract_parts else ""
 
-                if len(real_abstract_en) < 200:
+                if len(full_abstract_en) < 200:
                     continue
 
-                quest_en = "Based on the clinical history and findings described above, what is the most appropriate next management step?"
-                correct_en = "Order targeted diagnostic workup and specialized lab/imaging evaluation"
+                # SPOILER KESİCİ ALGORİTMA
+                history_en, outcome_en = trim_at_spoiler(full_abstract_en)
+
+                quest_en = "Based on the clinical history and initial findings presented above, what is the most appropriate next diagnostic or therapeutic step?"
+                correct_en = "Order targeted diagnostic laboratory workup and imaging evaluation"
                 wrongs_en = [
                     "Initiate empirical treatment without further diagnostic testing",
                     "Proceed to immediate invasive surgical procedure",
@@ -193,27 +173,24 @@ def fetch_cases():
                     "pmid": pmid,
                     "title_en": title_en,
                     "title_tr": translate_safe(title_en, 'tr'),
-                    "history_en": real_abstract_en,
-                    "history_tr": translate_safe(real_abstract_en, 'tr'),
+                    "history_en": history_en, # Spoiler'sız Anamnez
+                    "history_tr": translate_safe(history_en, 'tr'),
                     "question_en": quest_en,
                     "question_tr": translate_safe(quest_en, 'tr'),
                     "options_en": opts_en,
                     "options_tr": [translate_safe(o, 'tr') for o in opts_en],
                     "correct_idx": correct_idx,
-                    "explanation_en": f"Full clinical diagnostic evaluation and therapeutic rationale for PMID {pmid} are documented in the publication.",
-                    "explanation_tr": f"PMID {pmid} numaralı olgunun tüm klinik tanısal süreçleri ve tedavi yanıtı orijinal yayında detaylandırılmıştır.",
+                    "explanation_en": outcome_en, # Tedavi ve ameliyat sonucu buraya gizlendi!
+                    "explanation_tr": translate_safe(outcome_en, 'tr'),
                     "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
                 })
 
     except Exception as e:
         print(f"Kaynak Çekme Hatası: {e}")
 
-    # Can simidi listemizi de ekleyelim
     curated = get_rich_curated_cases()
     all_cases = cases + curated
-    
-    # En az 7 zengin vakayı garanti et
-    return all_cases[:10]
+    return all_cases[:8]
 
 def build_site():
     cases = fetch_cases()
@@ -291,8 +268,8 @@ def build_site():
         </ul>
 
         <div id="exp-{c['pmid']}" class="explanation-box">
-            <div class="lang-tr"><strong>Klinik Açıklama:</strong> {c['explanation_tr']}</div>
-            <div class="lang-en" style="display:none;"><strong>Clinical Rationale:</strong> {c['explanation_en']}</div>
+            <div class="lang-tr"><strong>Klinik Seyir & Ameliyat/Tedavi Sonucu:</strong> {c['explanation_tr']}</div>
+            <div class="lang-en" style="display:none;"><strong>Clinical Course & Outcome:</strong> {c['explanation_en']}</div>
             <a href="{c['url']}" target="_blank" class="pubmed-link">Orijinal Makaleyi Oku (PubMed) ↗</a>
         </div>
     </div>
