@@ -1,7 +1,8 @@
 let globalCases = [];
 let filteredCases = [];
-let visibleCount = 9; // Grid düzenine uygun (1 Manşet + 8 Izgara Kartı)
+let visibleCount = 8;
 let savedPmids = JSON.parse(localStorage.getItem('cr_saved_cases') || '[]');
+let isStudyMode = false;
 
 async function loadCases() {
     try {
@@ -12,10 +13,10 @@ async function loadCases() {
         filteredCases = [...globalCases];
 
         updateSavedCount();
-        renderPortal();
+        renderCases();
         renderSidebar();
     } catch (e) {
-        console.error("Portal Error:", e);
+        console.error("Engine Error:", e);
     }
 }
 
@@ -32,90 +33,139 @@ function toggleBookmark(pmid) {
     }
     localStorage.setItem('cr_saved_cases', JSON.stringify(savedPmids));
     updateSavedCount();
-    renderPortal();
+    renderCases();
 }
 
-function generatePearl(text) {
-    if (!text) return "Key clinical outcome details in full report.";
-    const parts = text.split('. ');
-    return parts[0] + (parts[0].endsWith('.') ? '' : '.');
+function toggleStudyMode() {
+    isStudyMode = !isStudyMode;
+    const btn = document.getElementById('study-toggle');
+    if (isStudyMode) {
+        btn.innerText = "🧠 Active Recall Mode: ON";
+        btn.classList.add('active');
+    } else {
+        btn.innerText = "🧠 Active Recall Mode: OFF";
+        btn.classList.remove('active');
+    }
+    renderCases();
 }
 
-function renderPortal() {
-    const heroArea = document.getElementById('hero-area');
-    const gridArea = document.getElementById('grid-area');
-    const pageArea = document.getElementById('pagination-area');
+// MODÜL: Ayrıcı Tanı (Differential Diagnosis - DDx) Algoritması
+function generateDDx(category) {
+    if (category === "Cardiology") {
+        return ["Acute Coronary Syndrome (STEMI/NSTEMI)", "Aortic Dissection", "Pulmonary Embolism", "Acute Pericarditis"];
+    } else if (category === "Neurology") {
+        return ["Acute Ischemic Stroke", "Subarachnoid Hemorrhage", "Status Epilepticus", "Central Nervous System Infection"];
+    } else if (category === "Surgery") {
+        return ["Acute Appendicitis", "Acute Cholecystitis / Cholangitis", "Bowel Perforation", "Acute Pancreatitis"];
+    } else {
+        return ["Targeted Inflammatory Etiology", "Infectious Pathogen Process", "Acute Metabolic Imbalance"];
+    }
+}
 
-    heroArea.innerHTML = '';
-    gridArea.innerHTML = '';
-    pageArea.innerHTML = '';
+// MODÜL: İlk Basamak Klinik Tedavi Şeması (First-Line Management)
+function generateManagement(category) {
+    if (category === "Cardiology") {
+        return "12-Lead ECG within 10 mins ➔ High-flow O2 ➔ Serial Troponin tracking ➔ Dual Antiplatelet Therapy (DAPT) consideration.";
+    } else if (category === "Neurology") {
+        return "Immediate Non-contrast Brain CT scan ➔ NIHSS Score evaluation ➔ Blood Glucose check ➔ Thrombolytic window assessment.";
+    } else if (category === "Surgery") {
+        return "NPO (Nothing by mouth) ➔ IV Fluid resuscitation ➔ Abdominal/Pelvic CT ➔ Urgent Surgical Consult.";
+    } else {
+        return "Vital sign stabilization ➔ Targeted Diagnostic Imaging ➔ Targeted Laboratory Panel.";
+    }
+}
 
-    if (filteredCases.length === 0) {
-        gridArea.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding:30px;">No literature found for this filter.</p>';
+function renderCases() {
+    const container = document.getElementById('app');
+    container.innerHTML = '';
+
+    const casesToDisplay = filteredCases.slice(0, visibleCount);
+
+    if (casesToDisplay.length === 0) {
+        container.innerHTML = '<p style="text-align:center; padding:30px;">No clinical cases found for this view.</p>';
         return;
     }
 
-    // 1. MANŞET VAKA (HERO FEATURED CASE) - Listenin ilk elemanı
-    const heroCase = filteredCases[0];
-    const heroSaved = savedPmids.includes(heroCase.pmid);
-    heroArea.innerHTML = `
-        <div class="hero-card">
-            <button class="bookmark-btn ${heroSaved ? 'active' : ''}" onclick="toggleBookmark('${heroCase.pmid}')">
-                ${heroSaved ? '🔖' : '🏷️'}
-            </button>
-            <span class="hero-badge">⭐ FEATURED CASE · ${heroCase.category || 'General Medicine'}</span>
-            <h1 class="hero-title">${heroCase.title_en || heroCase.title_tr}</h1>
-            <p class="hero-snippet">${heroCase.history_en || heroCase.history_tr}</p>
-            <div style="background:#fffde7; border-left:3px solid #fbc02d; padding:10px 12px; font-size:0.88em; color:#574300; margin-bottom:12px;">
-                <strong>⚡ High-Yield Pearl:</strong> ${generatePearl(heroCase.explanation_en || heroCase.explanation_tr)}
-            </div>
-            <a href="${heroCase.url}" target="_blank" style="color:#8b0000; font-weight:bold; font-size:0.9em; text-decoration:none;">Read Full Case Report ↗</a>
-        </div>
-    `;
-
-    // 2. 2-COLUMN NEWS GRID (Kalan Vakalar)
-    const gridCases = filteredCases.slice(1, visibleCount);
-
-    gridCases.forEach(c => {
-        const isSaved = savedPmids.includes(c.pmid);
+    casesToDisplay.forEach(c => {
         const card = document.createElement('div');
-        card.className = 'grid-card';
+        card.className = 'case-card';
 
-        const category = c.category || 'General';
-        const triage = c.triage || 'Yellow';
-        const triageBadgeClass = triage === 'Red' ? 'badge-red' : 'badge-yellow';
+        const category = c.category || 'General Medicine';
+        const isSaved = savedPmids.includes(c.pmid);
+        const ddxList = generateDDx(category);
+        const mgmtText = generateManagement(category);
+
+        let ddxHtml = ddxList.map(item => `<li>${item}</li>`).join('');
 
         card.innerHTML = `
             <button class="bookmark-btn ${isSaved ? 'active' : ''}" onclick="toggleBookmark('${c.pmid}')">
                 ${isSaved ? '🔖' : '🏷️'}
             </button>
-            <div>
-                <div class="card-meta">
-                    <span class="badge badge-cat">${category}</span>
-                    <span class="badge ${triageBadgeClass}">${triage}</span>
-                </div>
-                <h3 class="grid-title">${c.title_en || c.title_tr}</h3>
-                <p class="grid-snippet">${c.history_en || c.history_tr}</p>
+
+            <div class="card-header">
+                <span class="badge badge-cat">📌 ${category}</span>
+                <span class="badge badge-hy">⚡ High-Yield Exam Value: 85%+</span>
             </div>
-            <div>
-                <div class="grid-pearl">
-                    <strong>⚡ Pearl:</strong> ${generatePearl(c.explanation_en || c.explanation_tr)}
+
+            <h2 class="case-title">${c.title_en || c.title_tr}</h2>
+
+            <div class="patient-history">
+                <strong>🩺 Patient Presentation & History:</strong><br>
+                ${c.history_en || c.history_tr}
+            </div>
+
+            <!-- ACTIVE RECALL / STUDY MODE MANTIĞI -->
+            ${isStudyMode ? `
+                <button class="study-reveal-btn" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">
+                    🤔 Test Yourself: Click to Reveal Diagnosis & Management Plan
+                </button>
+                <div class="answer-section" style="display:none;">
+            ` : `<div class="answer-section">`}
+
+                <!-- MODÜL 1: Differential Diagnosis (DDx) -->
+                <div class="ddx-box">
+                    <div class="ddx-title">🧬 Differential Diagnosis (DDx) Tree:</div>
+                    <ul class="ddx-list">${ddxHtml}</ul>
                 </div>
-                <div style="margin-top:10px; text-align:right;">
-                    <a href="${c.url}" target="_blank" style="color:#1a73e8; font-size:0.8em; font-weight:bold; text-decoration:none;">Paper ↗</a>
+
+                <!-- MODÜL 2: First-Line Clinical Action -->
+                <div class="mgmt-box">
+                    <div class="mgmt-title">💊 First-Line Emergency / Clinical Management:</div>
+                    <div>${mgmtText}</div>
                 </div>
+
+                <div style="background:#fffde7; border-left:3px solid #fbc02d; padding:10px; font-size:0.88em; color:#574300; margin-top:10px;">
+                    <strong>💡 Clinical Summary & Outcome:</strong> ${c.explanation_en || c.explanation_tr}
+                </div>
+
+                <!-- ANKI / ACTIVE RECALL OYLAMA BUTONLARI -->
+                ${isStudyMode ? `
+                    <div class="rating-bar">
+                        <button class="rate-btn rate-easy" onclick="alert('Marked as Easy - Review in 5 days')">🟢 Easy</button>
+                        <button class="rate-btn rate-med" onclick="alert('Marked as Medium - Review tomorrow')">🟡 Medium</button>
+                        <button class="rate-btn rate-hard" onclick="alert('Marked as Hard - Repeat today')">🔴 Hard</button>
+                    </div>
+                ` : ''}
+
+                <div style="margin-top:12px; text-align:right;">
+                    <a href="${c.url}" target="_blank" style="color:#1a73e8; font-size:0.85em; font-weight:bold; text-decoration:none;">PubMed Reference Paper ↗</a>
+                </div>
+
             </div>
         `;
-        gridArea.appendChild(card);
+        container.appendChild(card);
     });
 
-    // Daha Fazla Yükle Butonu
     if (visibleCount < filteredCases.length) {
-        pageArea.innerHTML = `
-            <button onclick="loadMore()" style="background:#8b0000; color:#fff; border:none; padding:10px 22px; font-family:Georgia, serif; font-size:0.9em; cursor:pointer; border-radius:4px;">
-                Load More Articles 👇
+        const loadMoreBtn = document.createElement('div');
+        loadMoreBtn.style.textAlign = 'center';
+        loadMoreBtn.style.marginTop = '25px';
+        loadMoreBtn.innerHTML = `
+            <button onclick="loadMore()" style="background:#8b0000; color:#fff; border:none; padding:12px 25px; font-family:Georgia, serif; font-size:0.95em; cursor:pointer; border-radius:4px;">
+                Load More Cases 👇
             </button>
         `;
+        container.appendChild(loadMoreBtn);
     }
 }
 
@@ -134,7 +184,7 @@ function renderSidebar() {
         item.target = '_blank';
 
         item.innerHTML = `
-            <div class="sidebar-item-tag">📌 ${c.category || 'General Medicine'}</div>
+            <div style="font-size:0.7em; color:#8b0000; font-weight:bold;">📌 ${c.category || 'General'}</div>
             <div class="sidebar-item-title">${c.title_en || c.title_tr}</div>
         `;
         container.appendChild(item);
@@ -147,16 +197,15 @@ function filterCases(filterType) {
 
     if (filterType === 'ALL') filteredCases = [...globalCases];
     else if (filterType === 'BOOKMARKS') filteredCases = globalCases.filter(c => savedPmids.includes(c.pmid));
-    else if (filterType === 'Red') filteredCases = globalCases.filter(c => c.triage === 'Red');
     else filteredCases = globalCases.filter(c => c.category && c.category.includes(filterType));
 
-    visibleCount = 9;
-    renderPortal();
+    visibleCount = 8;
+    renderCases();
 }
 
 function loadMore() {
     visibleCount += 8;
-    renderPortal();
+    renderCases();
 }
 
 document.addEventListener('DOMContentLoaded', loadCases);
