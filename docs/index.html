@@ -1,31 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedikalRadar | Klinik Vaka & Analiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap');
 
+        :root {
+            --bg-color: #0b1320;
+            --card-bg: #111a2e;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --border: #1e293b;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
 
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            background: rgba(11, 19, 32, 0.95);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(8px);
+            z-index: 100;
+        }
 
+        .header-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-MedikalRadar | Klinik Vaka & Analiz
+        .logo {
+            font-family: 'Newsreader', serif;
+            font-size: 1.8em;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #fff;
+            text-decoration: none;
+        }
 
+        .lang-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85em;
+            transition: 0.2s;
+        }
 
+        .lang-btn:hover { background: #334155; }
 
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
 
+        .sub-header {
+            font-family: 'Newsreader', serif;
+            font-style: italic;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
 
+        .case-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
 
-    MEDİKALRADAR
-    TR | EN
+        .badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
 
+        h2.case-title {
+            font-family: 'Newsreader', serif;
+            font-size: 1.6em;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            color: #fff;
+            line-height: 1.3;
+        }
 
+        .case-text {
+            color: var(--text-main);
+            font-size: 0.98em;
+            margin-bottom: 20px;
+        }
 
+        .interactive-section {
+            background: #0d1526;
+            border-left: 3px solid var(--accent);
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 0 4px 4px 0;
+        }
 
+        .reveal-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: 0.3s;
+        }
 
-    PubMed veritabanından anlık çekilen açık erişimli klinik vaka analizleri.
+        .reveal-btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
 
+        .hidden-content {
+            display: none;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
 
+        .pubmed-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
 
+        .pubmed-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
 
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">MEDİKALRADAR</a>
+        <button class="lang-btn" onclick="toggleLanguage()">TR | EN</button>
+    </div>
+</header>
 
+<div class="container">
+    <div class="sub-header">
+        PubMed veritabanından anlık çekilen açık erişimli klinik vaka analizleri.
+    </div>
 
+    <div id="cases-list">
 
+        <div class="case-card">
+            <span class="badge">Klinik Vaka · PMID: 3849201</span>
+            
+            <h2 class="case-title lang-tr">Genç Erişkin Bir Hastada İzole Epigastrik Ağrı Olarak Ortaya Çıkan Akut Miyokard İnfarktüsü</h2>
+            <h2 class="case-title lang-en" style="display:none;">Acute Myocardial Infarction Presenting as Isolated Epigastric Pain in a Young Adult</h2>
 
+            <div class="case-text lang-tr">32 yaşında erkek hasta, akut gastriti taklit eden şiddetli epigastrik rahatsızlık şikayetiyle acil servise başvurdu. İlk EKG'de alt derivasyon II, III ve aVF'de ST segment elevasyonu görüldü. Acil koroner anjiyografi sağ koroner arterde akut tıkanıklık olduğunu doğruladı.</div>
+            <div class="case-text lang-en" style="display:none;">A 32-year-old male presented to the emergency department with severe epigastric discomfort mimicking acute gastritis. Initial ECG revealed ST-segment elevation in inferior leads II, III, and aVF. Immediate coronary angiography confirmed acute occlusion of the right coronary artery.</div>
 
+            <div class="interactive-section">
+                <button class="reveal-btn" onclick="toggleAnswer('3849201')">
+                    <span class="lang-tr">💡 Vaka Detayı & Kaynak</span>
+                    <span class="lang-en" style="display:none;">💡 Case Details & Source</span>
+                </button>
+                <div id="ans-3849201" class="hidden-content">
+                    <p class="lang-tr">Bu klinik vaka raporunun orijinal yayınına PubMed üzerinden ulaşabilirsiniz.</p>
+                    <p class="lang-en" style="display:none;">You can access the full report and clinical outcome directly on PubMed.</p>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="pubmed-link">PubMed Orijinal Makaleyi Oku (PMID: 3849201) ↗</a>
+                </div>
+            </div>
+        </div>
 
+        <div class="case-card">
+            <span class="badge">Klinik Vaka · PMID: 3849202</span>
+            
+            <h2 class="case-title lang-tr">Viral Üst Solunum Yolu Enfeksiyonunu Takip Eden Guillain-Barré Sendromunun Atipik Sunumu</h2>
+            <h2 class="case-title lang-en" style="display:none;">Atypical Presentation of Guillain-Barré Syndrome Following Viral Upper Respiratory Infection</h2>
 
+            <div class="case-text lang-tr">45 yaşında kadın hasta, hafif bir üst solunum yolu enfeksiyonundan iki hafta sonra ilerleyici alt ekstremite zayıflığı ve parestezi açısından değerlendirildi. Sinir iletim çalışmaları akut inflamatuar demiyelinizan polinöropatiyi (AIDP) doğruladı.</div>
+            <div class="case-text lang-en" style="display:none;">A 45-year-old female evaluated for progressive lower extremity weakness and paresthesia two weeks after a mild upper respiratory tract infection. Nerve conduction studies confirmed acute inflammatory demyelinating polyneuropathy (AIDP).</div>
+
+            <div class="interactive-section">
+                <button class="reveal-btn" onclick="toggleAnswer('3849202')">
+                    <span class="lang-tr">💡 Vaka Detayı & Kaynak</span>
+                    <span class="lang-en" style="display:none;">💡 Case Details & Source</span>
+                </button>
+                <div id="ans-3849202" class="hidden-content">
+                    <p class="lang-tr">Bu klinik vaka raporunun orijinal yayınına PubMed üzerinden ulaşabilirsiniz.</p>
+                    <p class="lang-en" style="display:none;">You can access the full report and clinical outcome directly on PubMed.</p>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="pubmed-link">PubMed Orijinal Makaleyi Oku (PMID: 3849202) ↗</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let currentLang = 'tr';
+
+    function toggleLanguage() {
+        const trElems = document.querySelectorAll('.lang-tr');
+        const enElems = document.querySelectorAll('.lang-en');
+
+        if (currentLang === 'tr') {
+            trElems.forEach(el => el.style.display = 'none');
+            enElems.forEach(el => el.style.display = 'block');
+            currentLang = 'en';
+        } else {
+            enElems.forEach(el => el.style.display = 'none');
+            trElems.forEach(el => el.style.display = 'tr');
+            currentLang = 'tr';
+        }
+    }
+
+    function toggleAnswer(pmid) {
+        const content = document.getElementById('ans-' + pmid);
+        if (content.style.display === 'block') {
+            content.style.display = 'none';
+        } else {
+            content.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
