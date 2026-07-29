@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedikalRadar | Klinik Vaka & Kılavuz İncelemeleri</title>
     <style>
-        /* Rosemary's Baby Klasik / Gotik Tıp Estetiği */
+        /* Rosemary's Baby - Açık Parşömen & Editoryal Tıp Kütüphanesi Teması */
         body {
-            background-color: #121211;
-            color: #d1c9b8;
+            background-color: #f4f1ea;
+            color: #1a1a1a;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -16,16 +16,16 @@
         }
 
         header {
-            background-color: #1a1a18;
-            border-bottom: 2px solid #2e2c27;
-            padding: 25px 0;
+            background-color: #e8e2d5;
+            border-bottom: 2px solid #8b0000;
+            padding: 30px 0;
             text-align: center;
         }
 
         .header-title {
             font-family: Georgia, serif;
-            color: #7c0a02;
-            font-size: 2.2em;
+            color: #8b0000;
+            font-size: 2.4em;
             margin: 0;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -35,8 +35,8 @@
         .sub-title {
             font-family: Georgia, serif;
             font-style: italic;
-            color: #8c8270;
-            font-size: 0.95em;
+            color: #555555;
+            font-size: 1em;
             margin-top: 5px;
         }
 
@@ -49,18 +49,19 @@
         }
 
         .lang-btn {
-            background: #1a1a18;
-            border: 1px solid #7c0a02;
-            color: #d1c9b8;
+            background: #e8e2d5;
+            border: 1px solid #8b0000;
+            color: #8b0000;
             padding: 6px 15px;
             font-family: Georgia, serif;
             cursor: pointer;
             font-size: 0.9em;
+            font-weight: bold;
             transition: 0.3s;
         }
 
         .lang-btn:hover {
-            background: #7c0a02;
+            background: #8b0000;
             color: #fff;
         }
 
@@ -71,28 +72,29 @@
         }
 
         .case-card {
-            background: #1a1a18;
-            border: 1px solid #2e2c27;
+            background: #ffffff;
+            border: 1px solid #dcd6cd;
             padding: 35px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .pmid-tag {
             font-family: Georgia, serif;
-            color: #7c0a02;
+            color: #8b0000;
             font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 1px solid #2e2c27;
+            border-bottom: 1px solid #e8e2d5;
             padding-bottom: 5px;
             display: inline-block;
             margin-bottom: 15px;
+            font-weight: bold;
         }
 
         h2.case-title {
             font-family: Georgia, serif;
-            color: #e6dfd1;
+            color: #1a1a1a;
             font-size: 1.5em;
             font-weight: normal;
             margin: 0 0 20px 0;
@@ -101,17 +103,17 @@
 
         .case-history {
             font-family: Arial, sans-serif;
-            color: #b8af9c;
+            color: #333333;
             font-size: 1em;
             margin-bottom: 25px;
-            background: #141413;
+            background: #f9f8f5;
             padding: 15px;
-            border-left: 3px solid #7c0a02;
+            border-left: 4px solid #8b0000;
         }
 
         .question-box {
             font-family: Georgia, serif;
-            color: #e6dfd1;
+            color: #1a1a1a;
             font-size: 1.05em;
             margin-bottom: 15px;
             font-weight: bold;
@@ -124,51 +126,54 @@
         }
 
         .option-item {
-            background: #22211e;
-            border: 1px solid #2e2c27;
+            background: #f4f1ea;
+            border: 1px solid #dcd6cd;
             padding: 12px 15px;
             margin-bottom: 8px;
             cursor: pointer;
             font-family: Arial, sans-serif;
             font-size: 0.95em;
             transition: 0.2s;
+            color: #222;
         }
 
         .option-item:hover {
-            background: #2a2925;
-            border-color: #7c0a02;
+            background: #e8e2d5;
+            border-color: #8b0000;
         }
 
         .option-item.correct {
-            background: #122818 !important;
+            background: #e8f5e9 !important;
             border-color: #2e7d32 !important;
-            color: #81c784 !important;
+            color: #1b5e20 !important;
+            font-weight: bold;
         }
 
         .option-item.wrong {
-            background: #2c1212 !important;
-            border-color: #7c0a02 !important;
-            color: #e57373 !important;
+            background: #ffebee !important;
+            border-color: #c62828 !important;
+            color: #b71c1c !important;
         }
 
         .explanation-box {
             display: none;
-            background: #141413;
-            border: 1px dashed #7c0a02;
+            background: #f9f8f5;
+            border: 1px dashed #8b0000;
             padding: 15px;
             margin-top: 15px;
             font-size: 0.9em;
-            color: #d1c9b8;
+            color: #222;
         }
 
         .pubmed-link {
             display: inline-block;
             margin-top: 15px;
-            color: #7c0a02;
+            color: #8b0000;
             text-decoration: none;
             font-family: Georgia, serif;
             font-size: 0.9em;
             font-style: italic;
+            font-weight: bold;
         }
 
         .pubmed-link:hover {
@@ -188,135 +193,6 @@
 </div>
 
 <div class="container">
-
-    <div class="case-card">
-        <div class="pmid-tag">Klinik Olgu Raporu · PMID: 3849201</div>
-        
-        <h2 class="case-title lang-tr">İzole Epigastrik Ağrı Olarak Ortaya Çıkan Akut İnferior Miyokard İnfarktüsü</h2>
-        <h2 class="case-title lang-en" style="display:none;">Acute Inferior Myocardial Infarction Presenting as Isolated Epigastric Pain</h2>
-
-        <div class="case-history lang-tr"><strong>Anamnez & Klinik Tablo:</strong> 32 yaşında erkek hasta, şiddetli epigastrik yanma ağrısı ve 2 saat süren hafif terleme şikayetiyle acil servise başvurdu ve başlangıçta yanlışlıkla akut gastrit tanısı konuldu.</div>
-        <div class="case-history lang-en" style="display:none;"><strong>History & Clinical Presentation:</strong> A 32-year-old male presented to the emergency room with severe epigastric burning pain and mild diaphoresis lasting for 2 hours, initially misdiagnosed as acute gastritis.</div>
-
-        <div class="question-box lang-tr">❓ Bu hasta için en kritik ilk tanı adımı nedir?</div>
-        <div class="question-box lang-en" style="display:none;">❓ What is the most critical initial diagnostic step for this patient?</div>
-
-        <ul class="options-list">
-
-            <li class="option-item" onclick="checkAnswer(this, true, 'exp-3849201')">
-                <span class="lang-tr">A) 12-Derivasyonlu Elektrokardiyogram (EKG)</span>
-                <span class="lang-en" style="display:none;">A) 12-Lead Electrocardiogram (ECG)</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849201')">
-                <span class="lang-tr">B) Acil Üst Endoskopi</span>
-                <span class="lang-en" style="display:none;">B) Emergency Upper Endoscopy</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849201')">
-                <span class="lang-tr">C) Oral Antiasit Uygulaması</span>
-                <span class="lang-en" style="display:none;">C) Oral Antacid Administration</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849201')">
-                <span class="lang-tr">D) Karın Ultrasonografisi</span>
-                <span class="lang-en" style="display:none;">D) Abdominal Ultrasound</span>
-            </li>
-
-        </ul>
-
-        <div id="exp-3849201" class="explanation-box">
-            <div class="lang-tr"><strong>Klinik Açıklama:</strong> Alt duvar MI'nın atipik sunumları sıklıkla gastrointestinal semptomları taklit eder. Varıştan sonraki 10 dakika içinde 12 derivasyonlu EKG çekilmesi zorunludur.</div>
-            <div class="lang-en" style="display:none;"><strong>Clinical Rationale:</strong> Atypical presentations of inferior wall MI often mimic gastrointestinal symptoms. A 12-lead ECG within 10 minutes of arrival is mandatory.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/3849201/" target="_blank" class="pubmed-link">Orijinal Makaleyi Oku (PubMed) ↗</a>
-        </div>
-    </div>
-
-    <div class="case-card">
-        <div class="pmid-tag">Klinik Olgu Raporu · PMID: 3849202</div>
-        
-        <h2 class="case-title lang-tr">Akut Viral Üst Solunum Yolu Enfeksiyonu Sonrası Guillain-Barré Sendromu</h2>
-        <h2 class="case-title lang-en" style="display:none;">Guillain-Barré Syndrome Following Acute Viral Upper Respiratory Infection</h2>
-
-        <div class="case-history lang-tr"><strong>Anamnez & Klinik Tablo:</strong> 45 yaşında kadın hasta, üst solunum yolu enfeksiyonundan 2 hafta sonra, 48 saat içinde gelişen ilerleyici simetrik alt ekstremite zayıflığı ve parestezi ile başvuruyor.</div>
-        <div class="case-history lang-en" style="display:none;"><strong>History & Clinical Presentation:</strong> A 45-year-old female presents with progressive symmetrical lower extremity weakness and paresthesia developing over 48 hours, 2 weeks after an upper respiratory infection.</div>
-
-        <div class="question-box lang-tr">❓ Yaklaşan solunum yetmezliğini izlemek için hangi yatak başı klinik testi en önemlidir?</div>
-        <div class="question-box lang-en" style="display:none;">❓ Which bedside clinical test is most essential to monitor for impending respiratory failure?</div>
-
-        <ul class="options-list">
-
-            <li class="option-item" onclick="checkAnswer(this, true, 'exp-3849202')">
-                <span class="lang-tr">A) Zorunlu Vital Kapasite (FVC) ve NIF</span>
-                <span class="lang-en" style="display:none;">A) Forced Vital Capacity (FVC) & NIF</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849202')">
-                <span class="lang-tr">B) Seri Arteriyel Kan Gazı</span>
-                <span class="lang-en" style="display:none;">B) Serial Arterial Blood Gas</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849202')">
-                <span class="lang-tr">C) Lomber Ponksiyonu Tekrarlayın</span>
-                <span class="lang-en" style="display:none;">C) Repeat Lumbar Puncture</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849202')">
-                <span class="lang-tr">D) Yalnızca Sürekli Nabız Oksimetresi</span>
-                <span class="lang-en" style="display:none;">D) Continuous Pulse Oximetry Only</span>
-            </li>
-
-        </ul>
-
-        <div id="exp-3849202" class="explanation-box">
-            <div class="lang-tr"><strong>Klinik Açıklama:</strong> Nabız oksimetresi nöromüsküler solunum yetmezliğinde geç dönemde düşer. Seri FVC ve Negatif İnspiratuar Kuvvet (NIF) erken teşhis için gereklidir.</div>
-            <div class="lang-en" style="display:none;"><strong>Clinical Rationale:</strong> Pulse oximetry drops late in neuromuscular respiratory failure. Serial FVC and Negative Inspiratory Force (NIF) are essential for early detection.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/3849202/" target="_blank" class="pubmed-link">Orijinal Makaleyi Oku (PubMed) ↗</a>
-        </div>
-    </div>
-
-    <div class="case-card">
-        <div class="pmid-tag">Klinik Olgu Raporu · PMID: 3849203</div>
-        
-        <h2 class="case-title lang-tr">Açıklanamayan Atriyal Fibrilasyon ve Hipertermi ile Ortaya Çıkan Tiroid Fırtınası</h2>
-        <h2 class="case-title lang-en" style="display:none;">Thyroid Storm Presenting with Unexplained Atrial Fibrillation and Hyperthermia</h2>
-
-        <div class="case-history lang-tr"><strong>Anamnez & Klinik Tablo:</strong> 28 yaşında bir kadın hasta, akut ajitasyon, konfüzyon, titreme, 39,8°C ateş ve hızlı atriyal fibrilasyon (HR 165 bpm) şikayetiyle getirildi.</div>
-        <div class="case-history lang-en" style="display:none;"><strong>History & Clinical Presentation:</strong> A 28-year-old female is brought in with acute agitation, confusion, tremor, temperature of 39.8°C, and rapid atrial fibrillation (HR 165 bpm).</div>
-
-        <div class="question-box lang-tr">❓ Periferik T4'ün T3'e dönüşümünü engellemek için İLK hangi ilaç uygulanmalıdır?</div>
-        <div class="question-box lang-en" style="display:none;">❓ Which medication should be administered FIRST to inhibit peripheral conversion of T4 to T3?</div>
-
-        <ul class="options-list">
-
-            <li class="option-item" onclick="checkAnswer(this, true, 'exp-3849203')">
-                <span class="lang-tr">A) Propiltiyoürasil (PTU) veya Metimazol</span>
-                <span class="lang-en" style="display:none;">A) Propylthiouracil (PTU) or Methimazole</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849203')">
-                <span class="lang-tr">B) Hidrokortizon IV</span>
-                <span class="lang-en" style="display:none;">B) Hydrocortisone IV</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849203')">
-                <span class="lang-tr">C) Propranolol IV</span>
-                <span class="lang-en" style="display:none;">C) Propranolol IV</span>
-            </li>
-
-            <li class="option-item" onclick="checkAnswer(this, false, 'exp-3849203')">
-                <span class="lang-tr">D) Lugol İyot Çözeltisi</span>
-                <span class="lang-en" style="display:none;">D) Lugol's Iodine Solution</span>
-            </li>
-
-        </ul>
-
-        <div id="exp-3849203" class="explanation-box">
-            <div class="lang-tr"><strong>Klinik Açıklama:</strong> Hormon sentezinin kötüleşmesini önlemek için antitiroid ilaçlar (PTU/Metimazol) iyot tedavisinden ÖNCE verilmelidir.</div>
-            <div class="lang-en" style="display:none;"><strong>Clinical Rationale:</strong> Antithyroid drugs (PTU/Methimazole) must be given BEFORE iodine therapy to prevent worsening hormone synthesis.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/3849203/" target="_blank" class="pubmed-link">Orijinal Makaleyi Oku (PubMed) ↗</a>
-        </div>
-    </div>
 
 </div>
 
@@ -343,7 +219,7 @@
         const options = parentUl.querySelectorAll('.option-item');
         
         options.forEach(opt => {
-            opt.onclick = null; // Tekrar tıklamayı engelle
+            opt.onclick = null;
             opt.style.cursor = 'default';
         });
 
