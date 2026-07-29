@@ -2,6 +2,27 @@ let globalCases = [];
 let filteredCases = [];
 let visibleCount = 10;
 
+// Genişletilmiş Tıbbi Terim & Kısaltma Sözlüğü (Hover yapınca çıkacak tanımlar)
+const MEDICAL_DICTIONARY = {
+    "ECG": "Electrocardiogram — Measures electrical activity of the heart.",
+    "EKG": "Electrocardiogram — Measures electrical activity of the heart.",
+    "Troponin": "Cardiac biomarker elevated during myocardial injury or infarction.",
+    "MRI": "Magnetic Resonance Imaging — High resolution non-radiation soft tissue scan.",
+    "CT": "Computed Tomography scan — Cross-sectional X-ray imaging.",
+    "STEMI": "ST-Elevation Myocardial Infarction — Acute severe heart attack requiring urgent reperfusion.",
+    "Areflexia": "Absence of neurological deep tendon reflexes.",
+    "Tachycardia": "Abnormally rapid heart rate (usually over 100 bpm in adults).",
+    "Bradycardia": "Abnormally slow heart rate (usually below 60 bpm).",
+    "Dyspnea": "Shortness of breath or difficult/labored breathing.",
+    "Laparoscopy": "Minimally invasive surgical procedure inside the abdomen.",
+    "Hypokalemia": "Abnormally low potassium concentration in the blood.",
+    "Hyperkalemia": "Abnormally high potassium level in the blood.",
+    "Anaphylaxis": "Severe, potentially life-threatening systemic allergic reaction.",
+    "Pneumothorax": "Abnormal collection of air in the pleural space that causes lung collapse.",
+    "Ascites": "Abnormal accumulation of fluid within the peritoneal cavity.",
+    "Biopsy": "Removal of tissue sample for diagnostic microscopic examination."
+};
+
 async function loadCases() {
     const appContainer = document.getElementById('app');
     try {
@@ -32,29 +53,20 @@ async function loadCases() {
     }
 }
 
-// Spot Bilgi Vurguları (Klinik Terim İşleyici)
+// Tıbbi Metinlerin İçindeki Terimleri Otomatik Tespit Edip Tooltip Ekler
 function highlightMedicalTerms(text) {
     if (!text) return "";
-    const terms = {
-        "ECG": "Electrocardiogram — measures heart electrical activity",
-        "EKG": "Electrocardiogram — measures heart electrical activity",
-        "Troponin": "Cardiac biomarker elevated during myocardial injury",
-        "MRI": "Magnetic Resonance Imaging — high resolution soft tissue scan",
-        "CT": "Computed Tomography scan",
-        "Areflexia": "Absence of deep tendon reflexes",
-        "STEMI": "ST-Elevation Myocardial Infarction (Acute Heart Attack)",
-        "Laparoscopy": "Minimally invasive abdominal surgery procedure"
-    };
 
     let processedText = text;
-    for (let key in terms) {
+    for (let key in MEDICAL_DICTIONARY) {
+        // Tam kelime eşleşmesi için Regex kullanımı
         const regex = new RegExp(`\\b(${key})\\b`, 'gi');
-        processedText = processedText.replace(regex, `<span class="spot-term" title="${terms[key]}">$1</span>`);
+        processedText = processedText.replace(regex, `<span class="spot-term" title="${MEDICAL_DICTIONARY[key]}">$1</span>`);
     }
     return processedText;
 }
 
-// Sol Taraf: İnteraktif Vaka & Guess the Diagnosis Kartları
+// Sol Taraf: Açık, Net Vaka Kartları (Butonsuz)
 function renderCases() {
     const container = document.getElementById('app');
     container.innerHTML = '';
@@ -83,17 +95,14 @@ function renderCases() {
                 <span class="badge ${triageBadgeClass}">${triage} Acuity</span>
             </div>
             <h2 class="case-title">${c.title_en || c.title_tr}</h2>
+            
             <div class="patient-history">
                 <strong>🩺 Clinical Presentation & History:</strong><br>
                 ${highlightedHistory}
             </div>
             
-            <!-- Guess the Diagnosis & Flip Action -->
-            <button class="reveal-btn" onclick="toggleDiagnosis('diag-${c.pmid}', this)">
-                🤔 Reveal Diagnosis & Key Clinical Takeaways
-            </button>
-            
-            <div id="diag-${c.pmid}" class="diagnosis-box">
+            <!-- Doğrudan Görünür Düzgün Sonuç Kutusu (Reveal Butonu Kaldırıldı) -->
+            <div class="diagnosis-box" style="display:block;">
                 <div class="diag-title">💡 Diagnostic Outcome & Key Takeaways:</div>
                 <p>${highlightedOutcome}</p>
                 <div style="margin-top:12px; text-align:right;">
@@ -110,7 +119,7 @@ function renderCases() {
         loadMoreBtn.style.marginTop = '25px';
         loadMoreBtn.innerHTML = `
             <button onclick="loadMoreCases()" style="background:#8b0000; color:#fff; border:none; padding:12px 25px; font-family:Georgia, serif; font-size:0.95em; cursor:pointer; border-radius:4px;">
-                Load More Interactive Cases 👇
+                Load More Cases 👇
             </button>
         `;
         container.appendChild(loadMoreBtn);
@@ -142,24 +151,12 @@ function renderSidebarArticles() {
     });
 }
 
-// "Guess the Diagnosis" Kutusu Aç/Kapa
-function toggleDiagnosis(id, btnElement) {
-    const box = document.getElementById(id);
-    if (box.style.display === 'block') {
-        box.style.display = 'none';
-        btnElement.innerText = "🤔 Reveal Diagnosis & Key Clinical Takeaways";
-        btnElement.style.background = "#8b0000";
-    } else {
-        box.style.display = 'block';
-        btnElement.innerText = "🔒 Hide Diagnosis";
-        btnElement.style.background = "#444";
-    }
-}
-
-// İnteraktif Filtreleme Fonksiyonu
+// İnteraktif Branş / Aciliyet Filtreleme
 function filterCases(filterType) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 
     if (filterType === 'ALL') {
         filteredCases = [...globalCases];
