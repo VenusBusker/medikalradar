@@ -4,22 +4,26 @@ import random
 import re
 import requests
 import xml.etree.ElementTree as ET
+from datetime import datetime
 from deep_translator import GoogleTranslator
 
 os.makedirs("docs", exist_ok=True)
 
 PUBMED_SEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 PUBMED_FETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+JSON_FILE_PATH = "docs/cases.json"
 
 def translate_safe(text, target_lang='tr'):
+    """Çeviri Emniyeti: Hata durumunda boş dönmez, orijinal metni korur."""
     if not text or len(text.strip()) == 0:
         return ""
     try:
         if len(text) > 1200:
             text = text[:1200] + "..."
-        return GoogleTranslator(source='auto', target=target_lang).translate(text)
+        translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
+        return translated if translated else text
     except Exception as e:
-        print(f"Çeviri hatası: {e}")
+        print(f"Çeviri emniyeti devreye girdi: {e}")
         return text
 
 def shuffle_options(correct_opt, wrong_opts):
@@ -49,126 +53,96 @@ def trim_at_spoiler(text_en):
     return " ".join(clinical_history), " ".join(clinical_outcome) if clinical_outcome else "Full diagnostic details in PubMed report."
 
 def is_valid_clinical_case(text):
-    """Makalenin soru sorulmaya uygun gerçek bir hasta vakası olup olmadığını denetler."""
     text_lower = text.lower()
-    # Hasta tanımlayan temel tıbbi ifadeler olmalı
     patient_indicators = ["year-old", "yr-old", "patient presented", "male presented", "female presented", "admitted with", "history of"]
     return any(ind in text_lower for ind in patient_indicators)
 
-def build_contextual_options(full_text):
-    """Metnin içeriğindeki spesifik kelimelere bakarak o vakaya ÖZEL soru ve şıklar üretir."""
+def extract_advanced_metadata(full_text):
+    """Branş, Triyaj (Aciliyet) ve Arama Kelimelerini tespit eder."""
     text_upper = full_text.upper()
     
-    # Branş ve Tanısal Odak Tespiti
-    if "CARDIAC" in text_upper or "ECG" in text_upper or "MYOCARDIAL" in text_upper:
-        question_tr = "Bu kardiyak tablo ile başvuran hastada ilk yapılması gereken acil tanısal yaklaşım nedir?"
-        question_en = "What is the most appropriate immediate diagnostic evaluation for this cardiac presentation?"
+    # 1. Branş Tespiti
+    category = "Genel Tıp"
+    if "CARDIAC" in text_upper or "ECG" in text_upper or "MYOCARDIAL" in text_upper or "HEART" in text_upper:
+        category = "Kardiyoloji"
+    elif "NEUROLOGICAL" in text_upper or "BRAIN" in text_upper or "SEIZURE" in text_upper or "STROKE" in text_upper:
+        category = "Nöroloji"
+    elif "ABDOMINAL" in text_upper or "SURGERY" in text_upper or "APPENDICITIS" in text_upper or "GASTRO" in text_upper:
+        category = "Genel Cerrahi / Gastroenteroloji"
+    elif "PEDIATRIC" in text_upper or "CHILD" in text_upper or "INFANT" in text_upper:
+        category = "Pediatri"
+    elif "PULMONARY" in text_upper or "LUNG" in text_upper or "PNEUMONIA" in text_upper:
+        category = "Göğüs Hastalıkları"
+
+    # 2. Triyaj (Aciliyet) Derecesi
+    triage = "Green" # Rutin / Poliklinik
+    if any(k in text_upper for k in ["CPR", "SHOCK", "ICU", "ANAPHYLAXIS", "ACUTE RESPIRATORY", "CARDIAC ARREST"]):
+        triage = "Red" # Acil / Kritik
+    elif any(k in text_upper for k in ["ACUTE PAIN", "HIGH FEVER", "FRACTURE", "TACHYCARDIA"]):
+        triage = "Yellow" # Orta Derece Acil
+
+    # 3. Anahtar Kelimeler (Keywords)
+    keywords = []
+    possible_kw = ["ECG", "CT Scan", "MRI", "Ultrasound", "Biopsy", "Fever", "Chest Pain", "Dyspnea", "Hypertension", "Tachycardia"]
+    for kw in possible_kw:
+        if kw.upper() in text_upper:
+            keywords.append(kw)
+
+    return category, triage, keywords
+
+def build_contextual_options(full_text, category):
+    """Metnin ve branşın bağlamına özel soru/şıklar üretir."""
+    if category == "Kardiyoloji":
+        q_tr = "Bu kardiyak tablo ile başvuran hastada ilk yapılması gereken acil tanısal yaklaşım nedir?"
+        q_en = "What is the most appropriate immediate diagnostic evaluation for this cardiac presentation?"
         correct = "Urgent 12-lead ECG and serial cardiac biomarker (Troponin) tracking"
-        wrongs = [
-            "Emergency upper gastrointestinal endoscopy",
-            "Empirical oral antibiotic and antipyretic administration",
-            "Routine non-contrast brain CT scan"
-        ]
-    elif "NEUROLOGICAL" in text_upper or "BRAIN" in text_upper or "SEIZURE" in text_upper or "WEAKNESS" in text_upper:
-        question_tr = "Bu nörolojik bulgularla başvuran hastada en uygun yaklaşım hangisidir?"
-        question_en = "What is the most appropriate next step for this neurological presentation?"
+        wrongs = ["Emergency upper gastrointestinal endoscopy", "Empirical oral antibiotic and antipyretic administration", "Routine non-contrast brain CT scan"]
+    elif category == "Nöroloji":
+        q_tr = "Bu nörolojik bulgularla başvuran hastada en uygun yaklaşım hangisidir?"
+        q_en = "What is the most appropriate next step for this neurological presentation?"
         correct = "Urgent Neuroimaging (Brain MRI/CT) and comprehensive neurological evaluation"
-        wrongs = [
-            "Immediate empirical oral antifungal therapy",
-            "Abdominal ultrasound and liver function blood panel",
-            "Discharge with outpatient physical therapy referral only"
-        ]
-    elif "ABDOMINAL" in text_upper or "PAIN" in text_upper or "SURGERY" in text_upper or "LAPAROSCOPY" in text_upper:
-        question_tr = "Bu akut karın / cerrahi tablo gösteren hastada ilk aşamada ne yapılmalıdır?"
-        question_en = "What is the most appropriate initial evaluation for this acute abdominal case?"
+        wrongs = ["Immediate empirical oral antifungal therapy", "Abdominal ultrasound and liver function blood panel", "Discharge with outpatient physical therapy referral only"]
+    elif "Cerrahi" in category:
+        q_tr = "Bu akut karın / cerrahi tablo gösteren hastada ilk aşamada ne yapılmalıdır?"
+        q_en = "What is the most appropriate initial evaluation for this acute abdominal case?"
         correct = "Contrast-enhanced Abdominal/Pelvic CT Scan and urgent surgical consultation"
-        wrongs = [
-            "Immediate outpatient chest radiography only",
-            "High-dose IV corticosteroid pulse therapy",
-            "Empirical psychiatric consultation"
-        ]
+        wrongs = ["Immediate outpatient chest radiography only", "High-dose IV corticosteroid pulse therapy", "Empirical psychiatric consultation"]
     else:
-        question_tr = "Yukarıdaki klinik öykü ve fizik muayene bulgularına dayanarak en uygun sonraki adım nedir?"
-        question_en = "Based on the clinical history above, what is the most appropriate next management step?"
+        q_tr = "Yukarıdaki klinik öykü ve fizik muayene bulgularına dayanarak en uygun sonraki adım nedir?"
+        q_en = "Based on the clinical history above, what is the most appropriate next management step?"
         correct = "Targeted specialized laboratory workup and targeted diagnostic imaging"
-        wrongs = [
-            "Empirical high-dose therapy without further laboratory testing",
-            "Immediate invasive surgical procedure without prior imaging",
-            "Discharge with routine outpatient follow-up only"
-        ]
+        wrongs = ["Empirical high-dose therapy without further laboratory testing", "Immediate invasive surgical procedure without prior imaging", "Discharge with routine outpatient follow-up only"]
         
-    return question_tr, question_en, correct, wrongs
+    return q_tr, q_en, correct, wrongs
 
-def get_high_quality_curated_cases():
-    """Her zaman %100 doğru, branşlandırılmış ve vakaya özel kusursuz vaka kütüphanesi."""
-    raw = [
-        {
-            "pmid": "3849201",
-            "title_en": "Acute Epigastric Burning Pain in a 32-Year-Old Male",
-            "history_en": "A 32-year-old male with no prior medical history presented to the ER with severe epigastric burning pain and diaphoresis lasting 2 hours. Physical exam showed HR 58 bpm and BP 100/65 mmHg. Abdominal exam was completely soft and non-tender.",
-            "question_tr": "Şiddetli epigastrik ağrı ve soğuk terleme ile başvuran bu hastada ilk istenmesi gereken hayati tetkik nedir?",
-            "question_en": "What is the most critical immediate diagnostic test required for this patient?",
-            "correct_en": "12-Lead Electrocardiogram (ECG) to evaluate for Inferior Wall STEMI",
-            "wrongs_en": ["Emergency Upper Endoscopy", "Abdominal CT Scan with Oral Contrast", "Serum Amylase & Lipase Test Panel"],
-            "explanation_en": "Inferior myocardial infarction frequently mimics acute gastritis. Obtaining a 12-lead ECG within 10 minutes is mandatory."
-        },
-        {
-            "pmid": "3849202",
-            "title_en": "Progressive Ascending Lower Extremity Weakness Following Viral Illness",
-            "history_en": "A 45-year-old female evaluated for ascending symmetrical lower extremity weakness and absent deep tendon reflexes (areflexia) developing over 72 hours, following a gastroenteritis episode 2 weeks prior.",
-            "question_tr": "Guillain-Barré Sendromu şüphesi olan bu hastada yatak başında sürekli izlenmesi gereken en kritik parametre nedir?",
-            "question_en": "Which clinical parameter is most vital to monitor continuously at bedside?",
-            "correct_en": "Forced Vital Capacity (FVC) and Negative Inspiratory Force (NIF)",
-            "wrongs_en": ["Serial Creatine Kinase (CK) Levels", "Continuous Pulse Oximetry Alone", "Repeat Lumbar Puncture Protein Tracking"],
-            "explanation_en": "In Guillain-Barré Syndrome, pulse oximetry drops late in respiratory failure. Bedside FVC monitoring is critical for timely intubation."
-        },
-        {
-            "pmid": "3849203",
-            "title_en": "Agitation, Severe Tachycardia, and Hyperthermia in a Young Female",
-            "history_en": "A 28-year-old female presents with severe agitation, profuse sweating, temp 39.9°C, and irregular tachycardia (HR 170 bpm). TSH is undetectable and free T4 is markedly elevated.",
-            "question_tr": "Tiroid fırtınası tablosundaki bu hastada iyot tedavisinden ÖNCE hangi ilaç verilmelidir?",
-            "question_en": "Which initial therapeutic agent should be administered FIRST before iodine?",
-            "correct_en": "Propylthiouracil (PTU) or Methimazole (Thionamides)",
-            "wrongs_en": ["Lugol's Iodine Solution", "IV Furosemide Bolus", "Immediate Electrical Cardioversion"],
-            "explanation_en": "Thionamides must be given at least 1 hour before iodine to block new hormone synthesis and prevent worsening of thyroid storm."
-        }
-    ]
-    processed = []
-    for c in raw:
-        opts_en, correct_idx = shuffle_options(c["correct_en"], c["wrongs_en"])
-        processed.append({
-            "pmid": c["pmid"],
-            "title_en": c["title_en"],
-            "title_tr": translate_safe(c["title_en"], 'tr'),
-            "history_en": c["history_en"],
-            "history_tr": translate_safe(c["history_en"], 'tr'),
-            "question_en": c["question_en"],
-            "question_tr": c["question_tr"],
-            "options_en": opts_en,
-            "options_tr": [translate_safe(o, 'tr') for o in opts_en],
-            "correct_idx": correct_idx,
-            "explanation_en": c["explanation_en"],
-            "explanation_tr": translate_safe(c["explanation_en"], 'tr'),
-            "url": f"https://pubmed.ncbi.nlm.nih.gov/{c['pmid']}/"
-        })
-    return processed
+def load_existing_cases():
+    if os.path.exists(JSON_FILE_PATH):
+        try:
+            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"JSON okuma hatası: {e}")
+    return []
 
-def fetch_cases():
-    cases = []
+def fetch_and_append_cases():
+    existing_cases = load_existing_cases()
+    existing_pmids = {c["pmid"] for c in existing_cases}
+    
+    new_cases = []
     try:
         params = {
             "db": "pubmed", 
             "term": "(case report[Publication Type]) AND free full text[sb]", 
-            "retmax": "20", 
+            "retmax": "100", 
             "sort": "pub_date", 
             "retmode": "json"
         }
-        res = requests.get(PUBMED_SEARCH_URL, params=params, timeout=10)
+        res = requests.get(PUBMED_SEARCH_URL, params=params, timeout=12)
         id_list = res.json().get("esearchresult", {}).get("idlist", [])
 
         if id_list:
             fetch_params = {"db": "pubmed", "id": ",".join(id_list), "retmode": "xml"}
-            xml_res = requests.get(PUBMED_FETCH_URL, params=fetch_params, timeout=12)
+            xml_res = requests.get(PUBMED_FETCH_URL, params=fetch_params, timeout=15)
             root = ET.fromstring(xml_res.content)
 
             for article in root.findall(".//PubmedArticle"):
@@ -176,46 +150,80 @@ def fetch_cases():
                 if pmid_elem is None: continue
                 pmid = pmid_elem.text
 
+                if pmid in existing_pmids: continue
+
                 title_elem = article.find(".//ArticleTitle")
                 title_en = title_elem.text if title_elem is not None else "Clinical Case Presentation"
+
+                # Yayın Tarihi Tespiti
+                pub_date_elem = article.find(".//Journal/JournalIssue/PubDate/Year")
+                published_year = pub_date_elem.text if pub_date_elem is not None else str(datetime.now().year)
 
                 abstract_nodes = article.findall(".//AbstractText")
                 full_abstract_en = " ".join([node.text for node in abstract_nodes if node.text])
 
-                # FILTRE 1: Gerçek klinik vaka değilse (hasta hikayesi içermiyorsa) ELE!
                 if len(full_abstract_en) < 180 or not is_valid_clinical_case(full_abstract_en):
                     continue
 
+                # Görsel Tespiti (PubMed Central Görsel Bağlantısı Altyapısı)
+                has_image = False
+                image_url = ""
+                pmc_elem = article.find(".//ArticleIdList/ArticleId[@IdType='pmc']")
+                if pmc_elem is None:
+                    # Alternatif ID arama
+                    for aid in article.findall(".//ArticleId"):
+                        if aid.get("IdType") == "pmc":
+                            pmc_elem = aid
+                            break
+                if pmc_elem is not None and pmc_elem.text:
+                    has_image = True
+                    image_url = f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmc_elem.text}/bin/"
+
                 history_en, outcome_en = trim_at_spoiler(full_abstract_en)
-                
-                # FILTRE 2: Metnin bağlamına göre spesifik soru ve şıklar türet
-                q_tr, q_en, correct_en, wrongs_en = build_contextual_options(full_abstract_en)
+                category, triage, keywords = extract_advanced_metadata(full_abstract_en)
+                q_tr, q_en, correct_en, wrongs_en = build_contextual_options(full_abstract_en, category)
                 opts_en, correct_idx = shuffle_options(correct_en, wrongs_en)
 
-                cases.append({
+                # Türkçe Çeviriler (Emniyetli)
+                title_tr = translate_safe(title_en, 'tr')
+                history_tr = translate_safe(history_en, 'tr')
+                outcome_tr = translate_safe(outcome_en, 'tr')
+                opts_tr = [translate_safe(o, 'tr') for o in opts_en]
+
+                new_case = {
                     "pmid": pmid,
                     "title_en": title_en,
-                    "title_tr": translate_safe(title_en, 'tr'),
+                    "title_tr": title_tr,
                     "history_en": history_en,
-                    "history_tr": translate_safe(history_en, 'tr'),
+                    "history_tr": history_tr,
                     "question_en": q_en,
                     "question_tr": q_tr,
                     "options_en": opts_en,
-                    "options_tr": [translate_safe(o, 'tr') for o in opts_en],
+                    "options_tr": opts_tr,
                     "correct_idx": correct_idx,
                     "explanation_en": outcome_en,
-                    "explanation_tr": translate_safe(outcome_en, 'tr'),
+                    "explanation_tr": outcome_tr,
+                    "category": category,
+                    "triage": triage,
+                    "keywords": keywords,
+                    "has_image": has_image,
+                    "image_url": image_url,
+                    "published_date": published_year,
+                    "fetched_at": datetime.now().strftime("%Y-%m-%d"),
                     "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
-                })
-    except Exception as e:
-        print(f"Hata: {e}")
+                }
+                
+                new_cases.append(new_case)
+                existing_pmids.add(pmid)
 
-    # Küratörlü altın vakaları canlı akışın altına ekle
-    curated = get_high_quality_curated_cases()
-    final_cases = cases[:5] + curated
-    
-    with open("docs/cases.json", "w", encoding="utf-8") as f:
-        json.dump(final_cases, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Çekim hatası: {e}")
+
+    # Yeni vakaları en başa ekle (Sınırsız Büyüyen Arşiv)
+    combined_cases = new_cases + existing_cases
+
+    with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
+        json.dump(combined_cases, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
-    fetch_cases()
+    fetch_and_append_cases()
