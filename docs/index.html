@@ -3,93 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClinicalRadar — Interactive Case & Medical Learning Hub</title>
+    <title>ClinicalRadar — Medical News & Clinical Cases Portal</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f1ea; color: #2b2b2b; line-height: 1.6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f6f3; color: #2b2b2b; line-height: 1.5; }
         
-        header { background: #8b0000; color: #fff; padding: 22px 0; text-align: center; border-bottom: 4px solid #5c0000; }
-        header h1 { font-family: Georgia, serif; font-size: 2.3em; font-weight: normal; letter-spacing: 1px; }
-        header p { font-size: 0.95em; opacity: 0.85; margin-top: 4px; }
+        /* Top Navigation & Header */
+        header { background: #8b0000; color: #fff; padding: 18px 0; border-bottom: 3px solid #5c0000; }
+        .header-inner { max-width: 1240px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .brand-title { font-family: Georgia, serif; font-size: 2em; font-weight: bold; letter-spacing: 0.5px; }
+        .brand-tagline { font-size: 0.85em; opacity: 0.85; }
 
-        /* Filtreleme Barları */
-        .filter-bar { background: #fff; border-bottom: 1px solid #dcd6cd; padding: 12px 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .filter-btn { background: #f0eae1; border: 1px solid #ccc; color: #444; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease; }
+        /* Filter Navigation Bar */
+        .filter-bar { background: #fff; border-bottom: 1px solid #e0dad0; padding: 10px 20px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { background: #f0eae1; border: 1px solid #d5cece; color: #444; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.82em; font-weight: 600; transition: all 0.2s; }
         .filter-btn:hover, .filter-btn.active { background: #8b0000; color: #fff; border-color: #8b0000; }
         .filter-btn.bookmark-filter { background: #fff8e1; border-color: #ffb300; color: #b78103; }
-        .filter-btn.bookmark-filter:hover, .filter-btn.bookmark-filter.active { background: #ffb300; color: #fff; }
+        .filter-btn.bookmark-filter.active { background: #ffb300; color: #fff; }
 
-        /* Layout Grid */
-        .container { max-width: 1240px; margin: 25px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
-        .main-content { flex: 2; min-width: 0; }
-        .sidebar { flex: 1; background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 20px; position: sticky; top: 20px; }
-        .sidebar-title { font-family: Georgia, serif; font-size: 1.2em; color: #8b0000; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #8b0000; display: flex; justify-content: space-between; align-items: center; }
-        .sidebar-title span { font-size: 0.75em; background: #f0eae1; color: #555; padding: 2px 8px; border-radius: 12px; font-family: sans-serif; }
+        /* Main Grid Layout */
+        .portal-container { max-width: 1240px; margin: 25px auto; padding: 0 20px; display: flex; gap: 25px; align-items: flex-start; }
+        .portal-main { flex: 3; min-width: 0; }
+        .portal-sidebar { flex: 1.2; background: #fff; border: 1px solid #e0dad0; border-radius: 6px; padding: 18px; position: sticky; top: 20px; max-height: calc(100vh - 40px); display: flex; flex-direction: column; }
 
-        /* Vaka Kartları */
-        .interactive-card { background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 3px 8px rgba(0,0,0,0.04); position: relative; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-right: 35px; }
-        .badge { font-size: 0.75em; font-weight: bold; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; }
+        /* HERO FEATURED CASE (Manşet Haber Kartı) */
+        .hero-card { background: #fff; border: 1px solid #dcd6cd; border-top: 4px solid #8b0000; border-radius: 6px; padding: 22px; margin-bottom: 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); position: relative; }
+        .hero-badge { display: inline-block; background: #8b0000; color: #fff; font-size: 0.72em; font-weight: bold; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; margin-bottom: 10px; }
+        .hero-title { font-family: Georgia, serif; font-size: 1.6em; color: #111; margin-bottom: 10px; line-height: 1.25; }
+        .hero-snippet { font-size: 0.95em; color: #444; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* 2-COLUMN NEWS GRID (İki Kolonlu Şık Haber Izgarası) */
+        .news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .grid-card { background: #fff; border: 1px solid #e0dad0; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+        .grid-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.06); border-color: #c5bdaf; }
+        
+        .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-right: 25px; }
+        .badge { font-size: 0.7em; font-weight: bold; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; }
         .badge-cat { background: #e8f0fe; color: #1a73e8; }
         .badge-red { background: #fce8e6; color: #c5221f; }
         .badge-yellow { background: #fef7e0; color: #b06000; }
-        .badge-green { background: #e6f4ea; color: #137333; }
         
-        /* Bookmark Butonu */
-        .bookmark-btn { position: absolute; top: 22px; right: 22px; background: transparent; border: none; font-size: 1.4em; cursor: pointer; color: #ccc; transition: 0.2s; }
-        .bookmark-btn.active { color: #ffb300; transform: scale(1.1); }
-        .bookmark-btn:hover { color: #ffb300; }
+        .grid-title { font-family: Georgia, serif; font-size: 1.1em; color: #111; margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .grid-snippet { font-size: 0.85em; color: #555; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
 
-        .case-title { font-family: Georgia, serif; font-size: 1.35em; color: #111; margin-bottom: 15px; line-height: 1.3; }
-        .patient-history { background: #faf8f5; border-left: 4px solid #8b0000; padding: 15px; font-size: 0.98em; color: #222; margin-bottom: 18px; line-height: 1.7; }
-        
-        .diagnosis-box { padding: 18px; background: #eef2f5; border-radius: 6px; border-left: 4px solid #1a73e8; margin-bottom: 15px; }
-        .diag-title { font-weight: bold; color: #1a73e8; font-size: 1.05em; margin-bottom: 8px; font-family: Georgia, serif; }
+        /* Pearl Box in Grid */
+        .grid-pearl { background: #fffde7; border-left: 3px solid #fbc02d; padding: 8px 10px; border-radius: 3px; font-size: 0.78em; color: #574300; margin-top: auto; }
 
-        /* 🔥 HIGH-YIELD CLINICAL PEARL KUTUSU */
-        .pearl-box { background: #fffde7; border: 1px solid #fff59d; border-left: 4px solid #fbc02d; padding: 15px; border-radius: 6px; font-size: 0.93em; color: #574300; }
-        .pearl-title { font-weight: bold; color: #f57f17; font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+        /* Bookmark Button */
+        .bookmark-btn { position: absolute; top: 14px; right: 14px; background: transparent; border: none; font-size: 1.2em; cursor: pointer; color: #ccc; transition: 0.2s; }
+        .bookmark-btn.active { color: #ffb300; }
 
-        /* Sağ Taraf Makale Kartları */
-        .article-card { background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: inherit; display: block; }
-        .article-card:hover { transform: translateY(-3px); box-shadow: 0 5px 12px rgba(0,0,0,0.08); border-color: #8b0000; background: #fff; }
-        .article-card-tag { font-size: 0.72em; color: #8b0000; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
-        .article-card-title { font-size: 0.88em; font-weight: 600; line-height: 1.35; color: #222; }
+        /* SIDEBAR (Derli Toplu Kaydırılabilir Panel) */
+        .sidebar-header { font-family: Georgia, serif; font-size: 1.1em; color: #8b0000; padding-bottom: 8px; border-bottom: 2px solid #8b0000; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-scroll { overflow-y: auto; flex: 1; padding-right: 4px; }
+        .sidebar-scroll::-webkit-scrollbar { width: 5px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        @media (max-width: 850px) {
-            .container { flex-direction: column; }
-            .sidebar { position: static; width: 100%; }
+        .sidebar-item { padding: 10px 0; border-bottom: 1px dashed #e0dad0; display: block; text-decoration: none; color: inherit; transition: background 0.2s; }
+        .sidebar-item:hover .sidebar-item-title { color: #8b0000; }
+        .sidebar-item-tag { font-size: 0.7em; color: #8b0000; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
+        .sidebar-item-title { font-size: 0.85em; font-weight: 600; line-height: 1.3; color: #222; }
+
+        @media (max-width: 900px) {
+            .portal-container { flex-direction: column; }
+            .news-grid { grid-template-columns: 1fr; }
+            .portal-sidebar { position: static; max-height: none; width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>ClinicalRadar</h1>
-        <p>Interactive Clinical Cases & Medical Learning Hub</p>
+        <div class="header-inner">
+            <div>
+                <div class="brand-title">ClinicalRadar</div>
+                <div class="brand-tagline">Clinical Literature & Academic Case Journal</div>
+            </div>
+        </div>
     </header>
 
     <div class="filter-bar">
-        <button class="filter-btn active" onclick="filterCases('ALL')">🌐 All Cases</button>
+        <button class="filter-btn active" onclick="filterCases('ALL')">🌐 All Literature</button>
         <button class="filter-btn" onclick="filterCases('Cardiology')">🫀 Cardiology</button>
         <button class="filter-btn" onclick="filterCases('Neurology')">🧠 Neurology</button>
         <button class="filter-btn" onclick="filterCases('Surgery')">🔪 Surgery</button>
-        <button class="filter-btn" onclick="filterCases('Red')">🔴 Emergency (Red)</button>
-        <button class="filter-btn bookmark-filter" onclick="filterCases('BOOKMARKS')">🔖 Saved Cases (<span id="saved-count">0</span>)</button>
+        <button class="filter-btn" onclick="filterCases('Red')">🔴 Critical (Red)</button>
+        <button class="filter-btn bookmark-filter" onclick="filterCases('BOOKMARKS')">🔖 Saved (<span id="saved-count">0</span>)</button>
     </div>
 
-    <div class="container">
-        <main class="main-content" id="app">
-            <p style="text-align:center; padding:30px;">Loading interactive clinical cases...</p>
+    <div class="portal-container">
+        <!-- SOL/ORTA ALAN: Manşet Vaka + İki Kolonlu Izgara -->
+        <main class="portal-main">
+            <!-- Hero Featured Area (Manşet) -->
+            <div id="hero-area"></div>
+
+            <!-- 2-Column Grid Area -->
+            <div class="news-grid" id="grid-area">
+                <p style="grid-column: 1/-1; text-align:center; padding:30px;">Loading portal contents...</p>
+            </div>
+            
+            <div id="pagination-area" style="text-align:center; margin-top:25px;"></div>
         </main>
 
-        <aside class="sidebar">
-            <div class="sidebar-title">
-                📄 Medical Papers
-                <span id="article-count">0 Papers</span>
+        <!-- SAĞ ALAN: Derli Toplu Kaydırılabilir Makale Akışı -->
+        <aside class="portal-sidebar">
+            <div class="sidebar-header">
+                📄 Latest Papers
+                <span id="article-count" style="font-size:0.75em; background:#f0eae1; color:#555; padding:2px 6px; border-radius:10px;">0</span>
             </div>
-            <div id="articles-list">
-                <p style="font-size:0.85em; color:#777; text-align:center;">Loading literature...</p>
+            <div class="sidebar-scroll" id="sidebar-scroll">
+                <p style="font-size:0.8em; color:#777; text-align:center;">Loading papers...</p>
             </div>
         </aside>
     </div>
