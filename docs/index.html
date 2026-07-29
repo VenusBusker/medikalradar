@@ -1,59 +1,59 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedikalRadar — Klinik Vaka & Literatür Portalı</title>
+    <title>ClinicalRadar — Interactive Case & Medical Learning Hub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f1ea; color: #2b2b2b; line-height: 1.6; }
         
-        header { background: #8b0000; color: #fff; padding: 20px 0; text-align: center; border-bottom: 4px solid #5c0000; }
-        header h1 { font-family: Georgia, serif; font-size: 2.2em; font-weight: normal; letter-spacing: 1px; }
-        header p { font-size: 0.95em; opacity: 0.85; margin-top: 5px; }
+        header { background: #8b0000; color: #fff; padding: 22px 0; text-align: center; border-bottom: 4px solid #5c0000; position: relative; }
+        header h1 { font-family: Georgia, serif; font-size: 2.3em; font-weight: normal; letter-spacing: 1px; }
+        header p { font-size: 0.95em; opacity: 0.85; margin-top: 4px; }
 
-        .lang-btn { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid #fff; color: #fff; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85em; transition: 0.3s; }
-        .lang-btn:hover { background: #fff; color: #8b0000; }
-
-        /* Ana Düzen: Sol (Sorular) - Sağ (Makale Akışı) */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
+        /* Filtreleme Barları (Kategori & Triyaj) */
+        .filter-bar { background: #fff; border-bottom: 1px solid #dcd6cd; padding: 12px 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .filter-btn { background: #f0eae1; border: 1px solid #ccc; color: #444; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease; }
+        .filter-btn:hover, .filter-btn.active { background: #8b0000; color: #fff; border-color: #8b0000; }
         
-        /* Sol Kolon - Soru Kartları */
+        /* Layout Grid */
+        .container { max-width: 1240px; margin: 25px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
         .main-content { flex: 2; min-width: 0; }
-        
-        /* Sağ Kolon - Literatür / Haber Akışı */
         .sidebar { flex: 1; background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 20px; position: sticky; top: 20px; }
         .sidebar-title { font-family: Georgia, serif; font-size: 1.2em; color: #8b0000; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #8b0000; display: flex; justify-content: space-between; align-items: center; }
         .sidebar-title span { font-size: 0.75em; background: #f0eae1; color: #555; padding: 2px 8px; border-radius: 12px; font-family: sans-serif; }
 
-        /* Haber / Makale Kartı */
-        .article-card { background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; cursor: pointer; transition: all 0.25s ease-in-out; text-decoration: none; color: inherit; display: block; }
+        /* Flashcard / İnteraktif Vaka Kartı */
+        .interactive-card { background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 3px 8px rgba(0,0,0,0.04); position: relative; transition: all 0.3s ease; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .badge { font-size: 0.75em; font-weight: bold; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; }
+        .badge-cat { background: #e8f0fe; color: #1a73e8; }
+        .badge-red { background: #fce8e6; color: #c5221f; }
+        .badge-yellow { background: #fef7e0; color: #b06000; }
+        .badge-green { background: #e6f4ea; color: #137333; }
         
-        /* HOVER EFEKTİ: Üzerine gelince tatlı yükselme ve gölge */
-        .article-card:hover { transform: translateY(-4px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); border-color: #8b0000; background: #fff; }
+        .case-title { font-family: Georgia, serif; font-size: 1.35em; color: #111; margin-bottom: 15px; line-height: 1.3; }
+        .patient-history { background: #faf8f5; border-left: 4px solid #8b0000; padding: 15px; font-size: 0.98em; color: #222; margin-bottom: 18px; line-height: 1.7; }
         
-        .article-card-tag { font-size: 0.75em; color: #8b0000; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
-        .article-card-title { font-size: 0.9em; font-weight: 600; line-height: 1.35; color: #222; }
-        .article-card-date { font-size: 0.75em; color: #888; margin-top: 6px; text-align: right; }
-
-        /* Vaka Kartı Stilleri */
-        .case-card { background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .pmid-tag { font-size: 0.8em; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .case-title { font-family: Georgia, serif; font-size: 1.4em; color: #111; margin-bottom: 15px; }
-        .case-history { background: #faf8f5; border-left: 3px solid #8b0000; padding: 12px 15px; font-size: 0.95em; margin-bottom: 20px; color: #333; }
-        .question-box { font-weight: 600; font-size: 1.05em; margin-bottom: 15px; color: #8b0000; }
+        /* "Guess the Diagnosis" Gizli Açıklama Kutusu */
+        .reveal-btn { width: 100%; background: #8b0000; color: #fff; border: none; padding: 12px; border-radius: 6px; font-family: Georgia, serif; font-size: 0.95em; cursor: pointer; transition: 0.25s; text-align: center; }
+        .reveal-btn:hover { background: #5c0000; }
         
-        .options-list { list-style: none; }
-        .option-item { background: #fff; border: 1px solid #ccc; padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 0.95em; transition: 0.2s; }
-        .option-item:hover { background: #f0eae1; border-color: #aaa; }
-        .option-item.correct { background: #e2f0d9; border-color: #70ad47; color: #385723; font-weight: bold; }
-        .option-item.wrong { background: #fce4d6; border-color: #c65911; color: #833c0c; }
+        .diagnosis-box { display: none; margin-top: 18px; padding: 18px; background: #eef2f5; border-radius: 6px; border-left: 4px solid #1a73e8; animation: fadeIn 0.4s ease; }
+        .diag-title { font-weight: bold; color: #1a73e8; font-size: 1.05em; margin-bottom: 8px; font-family: Georgia, serif; }
 
-        .explanation-box { display: none; margin-top: 20px; padding: 15px; background: #eef2f5; border-radius: 5px; font-size: 0.9em; border-left: 3px solid #2e75b6; }
-        .pubmed-link { display: inline-block; margin-top: 10px; color: #2e75b6; text-decoration: none; font-weight: bold; }
-        .pubmed-link:hover { text-decoration: underline; }
+        /* Tooltip Vurguları (Klinik Kelime Öğretici) */
+        .spot-term { text-decoration: underline dotted #8b0000; font-weight: 600; cursor: help; color: #8b0000; position: relative; }
 
-        /* Mobil Uyum (Ekran küçülünce alt alta geçer) */
+        /* Sağ Taraf Makale Kartları */
+        .article-card { background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: inherit; display: block; }
+        .article-card:hover { transform: translateY(-3px); box-shadow: 0 5px 12px rgba(0,0,0,0.08); border-color: #8b0000; background: #fff; }
+        .article-card-tag { font-size: 0.72em; color: #8b0000; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
+        .article-card-title { font-size: 0.88em; font-weight: 600; line-height: 1.35; color: #222; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
         @media (max-width: 850px) {
             .container { flex-direction: column; }
             .sidebar { position: static; width: 100%; }
@@ -63,25 +63,33 @@
 <body>
 
     <header>
-        <button class="lang-btn" onclick="toggleLanguage()">TR / EN</button>
-        <h1>MedikalRadar</h1>
-        <p>Güncel Klinik Vakalar ve Tıp Literatürü Akışı</p>
+        <h1>ClinicalRadar</h1>
+        <p>Interactive Clinical Cases & Medical Literature Hub</p>
     </header>
 
+    <!-- İnteraktif Branş & Triyaj Filtreleri -->
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterCases('ALL')">🌐 All Cases</button>
+        <button class="filter-btn" onclick="filterCases('Cardiology')">🫀 Cardiology</button>
+        <button class="filter-btn" onclick="filterCases('Neurology')">🧠 Neurology</button>
+        <button class="filter-btn" onclick="filterCases('Surgery')">🔪 Surgery</button>
+        <button class="filter-btn" onclick="filterCases('Red')">🔴 Emergency (Red)</button>
+    </div>
+
     <div class="container">
-        <!-- Sol Taraf: İnteraktif Vaka Soru Akışı -->
+        <!-- Sol Taraf: Flashcard & Guess the Diagnosis Alanı -->
         <main class="main-content" id="app">
-            <p style="text-align:center; padding:30px;">Vakalar Yükleniyor...</p>
+            <p style="text-align:center; padding:30px;">Loading interactive clinical cases...</p>
         </main>
 
-        <!-- Sağ Taraf: Makale / Literatür Akış Paneli -->
+        <!-- Sağ Taraf: Taze Literatür Akışı -->
         <aside class="sidebar">
             <div class="sidebar-title">
-                📄 Güncel Literatür
-                <span id="article-count">0 Makale</span>
+                📄 Medical Papers
+                <span id="article-count">0 Papers</span>
             </div>
             <div id="articles-list">
-                <p style="font-size:0.85em; color:#777; text-align:center;">Makaleler yükleniyor...</p>
+                <p style="font-size:0.85em; color:#777; text-align:center;">Loading literature...</p>
             </div>
         </aside>
     </div>
