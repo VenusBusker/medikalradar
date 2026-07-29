@@ -2,7 +2,7 @@ let globalCases = [];
 let filteredCases = [];
 let visibleCount = 10;
 
-// Genişletilmiş Tıbbi Terim & Kısaltma Sözlüğü (Hover yapınca çıkacak tanımlar)
+// Dev Tıbbi Sözlük (Kelimenin büyüklüğü/küçüklüğü fark etmez)
 const MEDICAL_DICTIONARY = {
     "ECG": "Electrocardiogram — Measures electrical activity of the heart.",
     "EKG": "Electrocardiogram — Measures electrical activity of the heart.",
@@ -20,7 +20,10 @@ const MEDICAL_DICTIONARY = {
     "Anaphylaxis": "Severe, potentially life-threatening systemic allergic reaction.",
     "Pneumothorax": "Abnormal collection of air in the pleural space that causes lung collapse.",
     "Ascites": "Abnormal accumulation of fluid within the peritoneal cavity.",
-    "Biopsy": "Removal of tissue sample for diagnostic microscopic examination."
+    "Biopsy": "Removal of tissue sample for diagnostic microscopic examination.",
+    "Patient": "Individual receiving medical care or treatment.",
+    "History": "Patient's past medical events and clinical background.",
+    "Diagnosis": "Identification of the nature of an illness by examination."
 };
 
 async function loadCases() {
@@ -53,20 +56,21 @@ async function loadCases() {
     }
 }
 
-// Tıbbi Metinlerin İçindeki Terimleri Otomatik Tespit Edip Tooltip Ekler
+// Terimleri Büyük/Küçük Harf Duyarsız Yakalayan Akıllı Fonksiyon
 function highlightMedicalTerms(text) {
     if (!text) return "";
 
     let processedText = text;
     for (let key in MEDICAL_DICTIONARY) {
-        // Tam kelime eşleşmesi için Regex kullanımı
+        // 'gi' bayrağı ile hem büyük hem küçük harfleri yakalıyoruz
         const regex = new RegExp(`\\b(${key})\\b`, 'gi');
-        processedText = processedText.replace(regex, `<span class="spot-term" title="${MEDICAL_DICTIONARY[key]}">$1</span>`);
+        processedText = processedText.replace(regex, (match) => {
+            return `<span class="spot-term" data-tooltip="${MEDICAL_DICTIONARY[key]}">${match}</span>`;
+        });
     }
     return processedText;
 }
 
-// Sol Taraf: Açık, Net Vaka Kartları (Butonsuz)
 function renderCases() {
     const container = document.getElementById('app');
     container.innerHTML = '';
@@ -101,8 +105,7 @@ function renderCases() {
                 ${highlightedHistory}
             </div>
             
-            <!-- Doğrudan Görünür Düzgün Sonuç Kutusu (Reveal Butonu Kaldırıldı) -->
-            <div class="diagnosis-box" style="display:block;">
+            <div class="diagnosis-box">
                 <div class="diag-title">💡 Diagnostic Outcome & Key Takeaways:</div>
                 <p>${highlightedOutcome}</p>
                 <div style="margin-top:12px; text-align:right;">
@@ -126,7 +129,6 @@ function renderCases() {
     }
 }
 
-// Sağ Taraf: Literatür Paneli
 function renderSidebarArticles() {
     const listContainer = document.getElementById('articles-list');
     const countTag = document.getElementById('article-count');
@@ -151,11 +153,10 @@ function renderSidebarArticles() {
     });
 }
 
-// İnteraktif Branş / Aciliyet Filtreleme
 function filterCases(filterType) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    if (event && event.target) {
-        event.target.classList.add('active');
+    if (window.event && window.event.target) {
+        window.event.target.classList.add('active');
     }
 
     if (filterType === 'ALL') {
