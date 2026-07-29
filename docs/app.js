@@ -1,46 +1,29 @@
 let globalCases = [];
 let filteredCases = [];
-let visibleCount = 10;
+let visibleCount = 9; // Grid düzenine uygun (1 Manşet + 8 Izgara Kartı)
 let savedPmids = JSON.parse(localStorage.getItem('cr_saved_cases') || '[]');
 
 async function loadCases() {
-    const appContainer = document.getElementById('app');
     try {
         const response = await fetch('cases.json?v=' + new Date().getTime());
+        if (!response.ok) throw new Error("cases.json error");
         
-        if (!response.ok) {
-            throw new Error("cases.json could not be loaded.");
-        }
-
         globalCases = await response.json();
         filteredCases = [...globalCases];
-        
-        if (!globalCases || globalCases.length === 0) {
-            appContainer.innerHTML = '<p style="text-align:center; padding:20px;">No cases found in archive.</p>';
-            return;
-        }
 
         updateSavedCount();
-        renderCases();
-        renderSidebarArticles();
+        renderPortal();
+        renderSidebar();
     } catch (e) {
-        console.error("Load Error:", e);
-        appContainer.innerHTML = `
-            <div style="text-align:center; padding:30px; background:#fff; border:1px solid #dcd6cd;">
-                <h3 style="color:#8b0000; font-family:Georgia, serif;">Loading Cases...</h3>
-                <p style="font-size:0.9em; color:#555;">Please refresh the page.</p>
-            </div>
-        `;
+        console.error("Portal Error:", e);
     }
 }
 
-// Favori Sayısını Günceller
 function updateSavedCount() {
-    const countSpan = document.getElementById('saved-count');
-    if (countSpan) countSpan.innerText = savedPmids.length;
+    const el = document.getElementById('saved-count');
+    if (el) el.innerText = savedPmids.length;
 }
 
-// Favori Ekle / Çıkar
 function toggleBookmark(pmid) {
     if (savedPmids.includes(pmid)) {
         savedPmids = savedPmids.filter(id => id !== pmid);
@@ -49,130 +32,131 @@ function toggleBookmark(pmid) {
     }
     localStorage.setItem('cr_saved_cases', JSON.stringify(savedPmids));
     updateSavedCount();
-    renderCases();
+    renderPortal();
 }
 
-// High-Yield Pearl Çıkarıcı (Metindeki en vurucu ilk cümleyi öne çıkarır)
-function generateClinicalPearl(outcomeText) {
-    if (!outcomeText) return "Key clinical diagnosis and management strategy outlined in full paper.";
-    const sentences = outcomeText.split('. ');
-    return sentences[0] + (sentences[0].endsWith('.') ? '' : '.');
+function generatePearl(text) {
+    if (!text) return "Key clinical outcome details in full report.";
+    const parts = text.split('. ');
+    return parts[0] + (parts[0].endsWith('.') ? '' : '.');
 }
 
-function renderCases() {
-    const container = document.getElementById('app');
-    container.innerHTML = '';
+function renderPortal() {
+    const heroArea = document.getElementById('hero-area');
+    const gridArea = document.getElementById('grid-area');
+    const pageArea = document.getElementById('pagination-area');
 
-    const casesToDisplay = filteredCases.slice(0, visibleCount);
+    heroArea.innerHTML = '';
+    gridArea.innerHTML = '';
+    pageArea.innerHTML = '';
 
-    if (casesToDisplay.length === 0) {
-        container.innerHTML = '<p style="text-align:center; padding:30px;">No cases match the selected filter.</p>';
+    if (filteredCases.length === 0) {
+        gridArea.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding:30px;">No literature found for this filter.</p>';
         return;
     }
 
-    casesToDisplay.forEach(c => {
-        const card = document.createElement('div');
-        card.className = 'interactive-card';
+    // 1. MANŞET VAKA (HERO FEATURED CASE) - Listenin ilk elemanı
+    const heroCase = filteredCases[0];
+    const heroSaved = savedPmids.includes(heroCase.pmid);
+    heroArea.innerHTML = `
+        <div class="hero-card">
+            <button class="bookmark-btn ${heroSaved ? 'active' : ''}" onclick="toggleBookmark('${heroCase.pmid}')">
+                ${heroSaved ? '🔖' : '🏷️'}
+            </button>
+            <span class="hero-badge">⭐ FEATURED CASE · ${heroCase.category || 'General Medicine'}</span>
+            <h1 class="hero-title">${heroCase.title_en || heroCase.title_tr}</h1>
+            <p class="hero-snippet">${heroCase.history_en || heroCase.history_tr}</p>
+            <div style="background:#fffde7; border-left:3px solid #fbc02d; padding:10px 12px; font-size:0.88em; color:#574300; margin-bottom:12px;">
+                <strong>⚡ High-Yield Pearl:</strong> ${generatePearl(heroCase.explanation_en || heroCase.explanation_tr)}
+            </div>
+            <a href="${heroCase.url}" target="_blank" style="color:#8b0000; font-weight:bold; font-size:0.9em; text-decoration:none;">Read Full Case Report ↗</a>
+        </div>
+    `;
 
-        const category = c.category || 'General Medicine';
-        const triage = c.triage || 'Yellow';
-        const triageBadgeClass = triage === 'Red' ? 'badge-red' : (triage === 'Green' ? 'badge-green' : 'badge-yellow');
+    // 2. 2-COLUMN NEWS GRID (Kalan Vakalar)
+    const gridCases = filteredCases.slice(1, visibleCount);
+
+    gridCases.forEach(c => {
         const isSaved = savedPmids.includes(c.pmid);
+        const card = document.createElement('div');
+        card.className = 'grid-card';
 
-        const pearlText = generateClinicalPearl(c.explanation_en || c.explanation_tr);
+        const category = c.category || 'General';
+        const triage = c.triage || 'Yellow';
+        const triageBadgeClass = triage === 'Red' ? 'badge-red' : 'badge-yellow';
 
         card.innerHTML = `
-            <button class="bookmark-btn ${isSaved ? 'active' : ''}" onclick="toggleBookmark('${c.pmid}')" title="Save to Personal Journal">
+            <button class="bookmark-btn ${isSaved ? 'active' : ''}" onclick="toggleBookmark('${c.pmid}')">
                 ${isSaved ? '🔖' : '🏷️'}
             </button>
-            <div class="card-header">
-                <span class="badge badge-cat">📌 ${category}</span>
-                <span class="badge ${triageBadgeClass}">${triage} Acuity</span>
+            <div>
+                <div class="card-meta">
+                    <span class="badge badge-cat">${category}</span>
+                    <span class="badge ${triageBadgeClass}">${triage}</span>
+                </div>
+                <h3 class="grid-title">${c.title_en || c.title_tr}</h3>
+                <p class="grid-snippet">${c.history_en || c.history_tr}</p>
             </div>
-            <h2 class="case-title">${c.title_en || c.title_tr}</h2>
-            
-            <div class="patient-history">
-                <strong>🩺 Clinical Presentation & History:</strong><br>
-                ${c.history_en || c.history_tr}
-            </div>
-            
-            <div class="diagnosis-box">
-                <div class="diag-title">💡 Diagnostic Outcome & Management:</div>
-                <p>${c.explanation_en || c.explanation_tr}</p>
-            </div>
-
-            <!-- 🔥 HIGH-YIELD CLINICAL PEARL KUTUSU -->
-            <div class="pearl-box">
-                <div class="pearl-title">⚡ High-Yield Clinical Pearl</div>
-                <div>${pearlText}</div>
-            </div>
-
-            <div style="margin-top:12px; text-align:right;">
-                <a href="${c.url}" target="_blank" style="color:#1a73e8; font-weight:bold; font-size:0.85em; text-decoration:none;">Read Full PubMed Paper ↗</a>
+            <div>
+                <div class="grid-pearl">
+                    <strong>⚡ Pearl:</strong> ${generatePearl(c.explanation_en || c.explanation_tr)}
+                </div>
+                <div style="margin-top:10px; text-align:right;">
+                    <a href="${c.url}" target="_blank" style="color:#1a73e8; font-size:0.8em; font-weight:bold; text-decoration:none;">Paper ↗</a>
+                </div>
             </div>
         `;
-        container.appendChild(card);
+        gridArea.appendChild(card);
     });
 
+    // Daha Fazla Yükle Butonu
     if (visibleCount < filteredCases.length) {
-        const loadMoreBtn = document.createElement('div');
-        loadMoreBtn.style.textAlign = 'center';
-        loadMoreBtn.style.marginTop = '25px';
-        loadMoreBtn.innerHTML = `
-            <button onclick="loadMoreCases()" style="background:#8b0000; color:#fff; border:none; padding:12px 25px; font-family:Georgia, serif; font-size:0.95em; cursor:pointer; border-radius:4px;">
-                Load More Cases 👇
+        pageArea.innerHTML = `
+            <button onclick="loadMore()" style="background:#8b0000; color:#fff; border:none; padding:10px 22px; font-family:Georgia, serif; font-size:0.9em; cursor:pointer; border-radius:4px;">
+                Load More Articles 👇
             </button>
         `;
-        container.appendChild(loadMoreBtn);
     }
 }
 
-function renderSidebarArticles() {
-    const listContainer = document.getElementById('articles-list');
+function renderSidebar() {
+    const container = document.getElementById('sidebar-scroll');
     const countTag = document.getElementById('article-count');
-    
-    if (!listContainer) return;
-    
-    listContainer.innerHTML = '';
-    countTag.innerText = `${globalCases.length} Papers`;
+    if (!container) return;
+
+    container.innerHTML = '';
+    countTag.innerText = globalCases.length;
 
     globalCases.forEach(c => {
-        const articleCard = document.createElement('a');
-        articleCard.className = 'article-card';
-        articleCard.href = `article.html?id=${c.pmid}`;
-        articleCard.target = '_blank';
+        const item = document.createElement('a');
+        item.className = 'sidebar-item';
+        item.href = `article.html?id=${c.pmid}`;
+        item.target = '_blank';
 
-        articleCard.innerHTML = `
-            <div class="article-card-tag">📄 ${c.category || 'General Medicine'}</div>
-            <div class="article-card-title">${c.title_en || c.title_tr}</div>
+        item.innerHTML = `
+            <div class="sidebar-item-tag">📌 ${c.category || 'General Medicine'}</div>
+            <div class="sidebar-item-title">${c.title_en || c.title_tr}</div>
         `;
-
-        listContainer.appendChild(articleCard);
+        container.appendChild(item);
     });
 }
 
 function filterCases(filterType) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    if (window.event && window.event.target) {
-        window.event.target.classList.add('active');
-    }
+    if (window.event && window.event.target) window.event.target.classList.add('active');
 
-    if (filterType === 'ALL') {
-        filteredCases = [...globalCases];
-    } else if (filterType === 'BOOKMARKS') {
-        filteredCases = globalCases.filter(c => savedPmids.includes(c.pmid));
-    } else if (filterType === 'Red') {
-        filteredCases = globalCases.filter(c => c.triage === 'Red');
-    } else {
-        filteredCases = globalCases.filter(c => (c.category && c.category.includes(filterType)));
-    }
-    visibleCount = 10;
-    renderCases();
+    if (filterType === 'ALL') filteredCases = [...globalCases];
+    else if (filterType === 'BOOKMARKS') filteredCases = globalCases.filter(c => savedPmids.includes(c.pmid));
+    else if (filterType === 'Red') filteredCases = globalCases.filter(c => c.triage === 'Red');
+    else filteredCases = globalCases.filter(c => c.category && c.category.includes(filterType));
+
+    visibleCount = 9;
+    renderPortal();
 }
 
-function loadMoreCases() {
-    visibleCount += 10;
-    renderCases();
+function loadMore() {
+    visibleCount += 8;
+    renderPortal();
 }
 
 document.addEventListener('DOMContentLoaded', loadCases);
