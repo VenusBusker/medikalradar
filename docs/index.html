@@ -3,44 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedikalRadar | Klinik Olgu Simülasyonları</title>
+    <title>MedikalRadar — Klinik Vaka & Literatür Portalı</title>
     <style>
-        body { background-color: #f4f1ea; color: #1a1a1a; font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.7; }
-        header { background-color: #e8e2d5; border-bottom: 2px solid #8b0000; padding: 30px 0; text-align: center; }
-        .header-title { font-family: Georgia, serif; color: #8b0000; font-size: 2.4em; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
-        .sub-title { font-family: Georgia, serif; font-style: italic; color: #555; font-size: 1em; margin-top: 5px; }
-        .top-bar { max-width: 800px; margin: 20px auto 0 auto; padding: 0 20px; display: flex; justify-content: flex-end; }
-        .lang-btn { background: #e8e2d5; border: 1px solid #8b0000; color: #8b0000; padding: 6px 15px; font-family: Georgia, serif; cursor: pointer; font-weight: bold; }
-        .container { max-width: 800px; margin: 20px auto 60px auto; padding: 0 20px; }
-        .case-card { background: #ffffff; border: 1px solid #dcd6cd; padding: 35px; margin-bottom: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .pmid-tag { font-family: Georgia, serif; color: #8b0000; font-size: 0.85em; text-transform: uppercase; border-bottom: 1px solid #e8e2d5; padding-bottom: 5px; margin-bottom: 15px; font-weight: bold; display: inline-block; }
-        h2.case-title { font-family: Georgia, serif; color: #1a1a1a; font-size: 1.5em; font-weight: normal; margin: 0 0 20px 0; }
-        .case-history { font-family: Arial, sans-serif; color: #333; font-size: 0.98em; margin-bottom: 25px; background: #f9f8f5; padding: 18px; border-left: 4px solid #8b0000; }
-        .question-box { font-family: Georgia, serif; font-size: 1.05em; margin-bottom: 15px; font-weight: bold; }
-        .options-list { list-style: none; padding: 0; margin: 0 0 20px 0; }
-        .option-item { background: #f4f1ea; border: 1px solid #dcd6cd; padding: 12px 15px; margin-bottom: 8px; cursor: pointer; }
-        .option-item:hover { background: #e8e2d5; border-color: #8b0000; }
-        .option-item.correct { background: #e8f5e9 !important; border-color: #2e7d32 !important; color: #1b5e20 !important; font-weight: bold; }
-        .option-item.wrong { background: #ffebee !important; border-color: #c62828 !important; color: #b71c1c !important; }
-        .explanation-box { display: none; background: #f9f8f5; border: 1px dashed #8b0000; padding: 18px; margin-top: 20px; }
-        .pubmed-link { display: inline-block; margin-top: 15px; color: #8b0000; text-decoration: none; font-family: Georgia, serif; font-weight: bold; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f1ea; color: #2b2b2b; line-height: 1.6; }
+        
+        header { background: #8b0000; color: #fff; padding: 20px 0; text-align: center; border-bottom: 4px solid #5c0000; }
+        header h1 { font-family: Georgia, serif; font-size: 2.2em; font-weight: normal; letter-spacing: 1px; }
+        header p { font-size: 0.95em; opacity: 0.85; margin-top: 5px; }
+
+        .lang-btn { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid #fff; color: #fff; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85em; transition: 0.3s; }
+        .lang-btn:hover { background: #fff; color: #8b0000; }
+
+        /* Ana Düzen: Sol (Sorular) - Sağ (Makale Akışı) */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
+        
+        /* Sol Kolon - Soru Kartları */
+        .main-content { flex: 2; min-width: 0; }
+        
+        /* Sağ Kolon - Literatür / Haber Akışı */
+        .sidebar { flex: 1; background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 20px; position: sticky; top: 20px; }
+        .sidebar-title { font-family: Georgia, serif; font-size: 1.2em; color: #8b0000; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #8b0000; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-title span { font-size: 0.75em; background: #f0eae1; color: #555; padding: 2px 8px; border-radius: 12px; font-family: sans-serif; }
+
+        /* Haber / Makale Kartı */
+        .article-card { background: #faf8f5; border: 1px solid #e5dfd5; border-radius: 6px; padding: 12px 15px; margin-bottom: 12px; cursor: pointer; transition: all 0.25s ease-in-out; text-decoration: none; color: inherit; display: block; }
+        
+        /* HOVER EFEKTİ: Üzerine gelince tatlı yükselme ve gölge */
+        .article-card:hover { transform: translateY(-4px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); border-color: #8b0000; background: #fff; }
+        
+        .article-card-tag { font-size: 0.75em; color: #8b0000; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
+        .article-card-title { font-size: 0.9em; font-weight: 600; line-height: 1.35; color: #222; }
+        .article-card-date { font-size: 0.75em; color: #888; margin-top: 6px; text-align: right; }
+
+        /* Vaka Kartı Stilleri */
+        .case-card { background: #fff; border: 1px solid #dcd6cd; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .pmid-tag { font-size: 0.8em; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .case-title { font-family: Georgia, serif; font-size: 1.4em; color: #111; margin-bottom: 15px; }
+        .case-history { background: #faf8f5; border-left: 3px solid #8b0000; padding: 12px 15px; font-size: 0.95em; margin-bottom: 20px; color: #333; }
+        .question-box { font-weight: 600; font-size: 1.05em; margin-bottom: 15px; color: #8b0000; }
+        
+        .options-list { list-style: none; }
+        .option-item { background: #fff; border: 1px solid #ccc; padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 0.95em; transition: 0.2s; }
+        .option-item:hover { background: #f0eae1; border-color: #aaa; }
+        .option-item.correct { background: #e2f0d9; border-color: #70ad47; color: #385723; font-weight: bold; }
+        .option-item.wrong { background: #fce4d6; border-color: #c65911; color: #833c0c; }
+
+        .explanation-box { display: none; margin-top: 20px; padding: 15px; background: #eef2f5; border-radius: 5px; font-size: 0.9em; border-left: 3px solid #2e75b6; }
+        .pubmed-link { display: inline-block; margin-top: 10px; color: #2e75b6; text-decoration: none; font-weight: bold; }
+        .pubmed-link:hover { text-decoration: underline; }
+
+        /* Mobil Uyum (Ekran küçülünce alt alta geçer) */
+        @media (max-width: 850px) {
+            .container { flex-direction: column; }
+            .sidebar { position: static; width: 100%; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1 class="header-title">MEDİKALRADAR</h1>
-    <div class="sub-title">Klinik Olgu Simülasyonları & Tıbbi Analizler</div>
-</header>
+    <header>
+        <button class="lang-btn" onclick="toggleLanguage()">TR / EN</button>
+        <h1>MedikalRadar</h1>
+        <p>Güncel Klinik Vakalar ve Tıp Literatürü Akışı</p>
+    </header>
 
-<div class="top-bar">
-    <button class="lang-btn" onclick="toggleLanguage()">Dil: TR | EN</button>
-</div>
+    <div class="container">
+        <!-- Sol Taraf: İnteraktif Vaka Soru Akışı -->
+        <main class="main-content" id="app">
+            <p style="text-align:center; padding:30px;">Vakalar Yükleniyor...</p>
+        </main>
 
-<div class="container" id="app">
-    <!-- Vakalar Buraya Dinamik Yüklenecek -->
-</div>
+        <!-- Sağ Taraf: Makale / Literatür Akış Paneli -->
+        <aside class="sidebar">
+            <div class="sidebar-title">
+                📄 Güncel Literatür
+                <span id="article-count">0 Makale</span>
+            </div>
+            <div id="articles-list">
+                <p style="font-size:0.85em; color:#777; text-align:center;">Makaleler yükleniyor...</p>
+            </div>
+        </aside>
+    </div>
 
-<script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
